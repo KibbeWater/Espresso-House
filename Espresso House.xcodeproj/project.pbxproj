@@ -1,0 +1,637 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		801107ED2D138159009F6F3F /* Kingfisher in Frameworks */ = {isa = PBXBuildFile; productRef = 801107EC2D138159009F6F3F /* Kingfisher */; };
+		801107FA2D13A0AD009F6F3F /* Cache in Frameworks */ = {isa = PBXBuildFile; productRef = 801107F92D13A0AD009F6F3F /* Cache */; };
+		80A698ED2D32D26800CED0CC /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = 80A698EC2D32D26800CED0CC /* Alamofire */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		8097262F2D0653B0006F1BE1 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 809726142D0653AE006F1BE1 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 8097261B2D0653AE006F1BE1;
+			remoteInfo = "Espresso House";
+		};
+		809726392D0653B0006F1BE1 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 809726142D0653AE006F1BE1 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 8097261B2D0653AE006F1BE1;
+			remoteInfo = "Espresso House";
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		8097261C2D0653AE006F1BE1 /* Espresso House.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Espresso House.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		8097262E2D0653B0006F1BE1 /* Espresso HouseTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Espresso HouseTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		809726382D0653B0006F1BE1 /* Espresso HouseUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Espresso HouseUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFileSystemSynchronizedRootGroup section */
+		8097261E2D0653AE006F1BE1 /* Espresso House */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = "Espresso House";
+			sourceTree = "<group>";
+		};
+		809726312D0653B0006F1BE1 /* Espresso HouseTests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = "Espresso HouseTests";
+			sourceTree = "<group>";
+		};
+		8097263B2D0653B0006F1BE1 /* Espresso HouseUITests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = "Espresso HouseUITests";
+			sourceTree = "<group>";
+		};
+/* End PBXFileSystemSynchronizedRootGroup section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		809726192D0653AE006F1BE1 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				80A698ED2D32D26800CED0CC /* Alamofire in Frameworks */,
+				801107ED2D138159009F6F3F /* Kingfisher in Frameworks */,
+				801107FA2D13A0AD009F6F3F /* Cache in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		8097262B2D0653B0006F1BE1 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		809726352D0653B0006F1BE1 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		801107EB2D138159009F6F3F /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		809726132D0653AE006F1BE1 = {
+			isa = PBXGroup;
+			children = (
+				8097261E2D0653AE006F1BE1 /* Espresso House */,
+				809726312D0653B0006F1BE1 /* Espresso HouseTests */,
+				8097263B2D0653B0006F1BE1 /* Espresso HouseUITests */,
+				801107EB2D138159009F6F3F /* Frameworks */,
+				8097261D2D0653AE006F1BE1 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		8097261D2D0653AE006F1BE1 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				8097261C2D0653AE006F1BE1 /* Espresso House.app */,
+				8097262E2D0653B0006F1BE1 /* Espresso HouseTests.xctest */,
+				809726382D0653B0006F1BE1 /* Espresso HouseUITests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		8097261B2D0653AE006F1BE1 /* Espresso House */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 809726422D0653B0006F1BE1 /* Build configuration list for PBXNativeTarget "Espresso House" */;
+			buildPhases = (
+				809726182D0653AE006F1BE1 /* Sources */,
+				809726192D0653AE006F1BE1 /* Frameworks */,
+				8097261A2D0653AE006F1BE1 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				8097261E2D0653AE006F1BE1 /* Espresso House */,
+			);
+			name = "Espresso House";
+			packageProductDependencies = (
+				801107EC2D138159009F6F3F /* Kingfisher */,
+				801107F92D13A0AD009F6F3F /* Cache */,
+				80A698EC2D32D26800CED0CC /* Alamofire */,
+			);
+			productName = "Espresso House";
+			productReference = 8097261C2D0653AE006F1BE1 /* Espresso House.app */;
+			productType = "com.apple.product-type.application";
+		};
+		8097262D2D0653B0006F1BE1 /* Espresso HouseTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 809726452D0653B0006F1BE1 /* Build configuration list for PBXNativeTarget "Espresso HouseTests" */;
+			buildPhases = (
+				8097262A2D0653B0006F1BE1 /* Sources */,
+				8097262B2D0653B0006F1BE1 /* Frameworks */,
+				8097262C2D0653B0006F1BE1 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				809726302D0653B0006F1BE1 /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				809726312D0653B0006F1BE1 /* Espresso HouseTests */,
+			);
+			name = "Espresso HouseTests";
+			packageProductDependencies = (
+			);
+			productName = "Espresso HouseTests";
+			productReference = 8097262E2D0653B0006F1BE1 /* Espresso HouseTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		809726372D0653B0006F1BE1 /* Espresso HouseUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 809726482D0653B0006F1BE1 /* Build configuration list for PBXNativeTarget "Espresso HouseUITests" */;
+			buildPhases = (
+				809726342D0653B0006F1BE1 /* Sources */,
+				809726352D0653B0006F1BE1 /* Frameworks */,
+				809726362D0653B0006F1BE1 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				8097263A2D0653B0006F1BE1 /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				8097263B2D0653B0006F1BE1 /* Espresso HouseUITests */,
+			);
+			name = "Espresso HouseUITests";
+			packageProductDependencies = (
+			);
+			productName = "Espresso HouseUITests";
+			productReference = 809726382D0653B0006F1BE1 /* Espresso HouseUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		809726142D0653AE006F1BE1 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 1610;
+				LastUpgradeCheck = 1610;
+				TargetAttributes = {
+					8097261B2D0653AE006F1BE1 = {
+						CreatedOnToolsVersion = 16.1;
+					};
+					8097262D2D0653B0006F1BE1 = {
+						CreatedOnToolsVersion = 16.1;
+						TestTargetID = 8097261B2D0653AE006F1BE1;
+					};
+					809726372D0653B0006F1BE1 = {
+						CreatedOnToolsVersion = 16.1;
+						TestTargetID = 8097261B2D0653AE006F1BE1;
+					};
+				};
+			};
+			buildConfigurationList = 809726172D0653AE006F1BE1 /* Build configuration list for PBXProject "Espresso House" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 809726132D0653AE006F1BE1;
+			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				801107EA2D1380CB009F6F3F /* XCRemoteSwiftPackageReference "Kingfisher" */,
+				801107F82D13A0A3009F6F3F /* XCRemoteSwiftPackageReference "Cache" */,
+				80A698EB2D32D26800CED0CC /* XCRemoteSwiftPackageReference "Alamofire" */,
+			);
+			preferredProjectObjectVersion = 77;
+			productRefGroup = 8097261D2D0653AE006F1BE1 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				8097261B2D0653AE006F1BE1 /* Espresso House */,
+				8097262D2D0653B0006F1BE1 /* Espresso HouseTests */,
+				809726372D0653B0006F1BE1 /* Espresso HouseUITests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		8097261A2D0653AE006F1BE1 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		8097262C2D0653B0006F1BE1 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		809726362D0653B0006F1BE1 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		809726182D0653AE006F1BE1 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		8097262A2D0653B0006F1BE1 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		809726342D0653B0006F1BE1 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		809726302D0653B0006F1BE1 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 8097261B2D0653AE006F1BE1 /* Espresso House */;
+			targetProxy = 8097262F2D0653B0006F1BE1 /* PBXContainerItemProxy */;
+		};
+		8097263A2D0653B0006F1BE1 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 8097261B2D0653AE006F1BE1 /* Espresso House */;
+			targetProxy = 809726392D0653B0006F1BE1 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		809726402D0653B0006F1BE1 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.1;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		809726412D0653B0006F1BE1 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.1;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		809726432D0653B0006F1BE1 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = "Espresso House/Espresso House.entitlements";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"Espresso House/Preview Content\"";
+				DEVELOPMENT_TEAM = 89625ZHN6X;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Find nearby Shops";
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.kibbewater.Espresso-House";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		809726442D0653B0006F1BE1 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = "Espresso House/Espresso House.entitlements";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"Espresso House/Preview Content\"";
+				DEVELOPMENT_TEAM = 89625ZHN6X;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Find nearby Shops";
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.kibbewater.Espresso-House";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		809726462D0653B0006F1BE1 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 89625ZHN6X;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.1;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.kibbewater.Espresso-HouseTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Espresso House.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Espresso House";
+			};
+			name = Debug;
+		};
+		809726472D0653B0006F1BE1 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 89625ZHN6X;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.1;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.kibbewater.Espresso-HouseTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Espresso House.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Espresso House";
+			};
+			name = Release;
+		};
+		809726492D0653B0006F1BE1 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 89625ZHN6X;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.kibbewater.Espresso-HouseUITests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = "Espresso House";
+			};
+			name = Debug;
+		};
+		8097264A2D0653B0006F1BE1 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 89625ZHN6X;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.kibbewater.Espresso-HouseUITests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = "Espresso House";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		809726172D0653AE006F1BE1 /* Build configuration list for PBXProject "Espresso House" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				809726402D0653B0006F1BE1 /* Debug */,
+				809726412D0653B0006F1BE1 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		809726422D0653B0006F1BE1 /* Build configuration list for PBXNativeTarget "Espresso House" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				809726432D0653B0006F1BE1 /* Debug */,
+				809726442D0653B0006F1BE1 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		809726452D0653B0006F1BE1 /* Build configuration list for PBXNativeTarget "Espresso HouseTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				809726462D0653B0006F1BE1 /* Debug */,
+				809726472D0653B0006F1BE1 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		809726482D0653B0006F1BE1 /* Build configuration list for PBXNativeTarget "Espresso HouseUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				809726492D0653B0006F1BE1 /* Debug */,
+				8097264A2D0653B0006F1BE1 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		801107EA2D1380CB009F6F3F /* XCRemoteSwiftPackageReference "Kingfisher" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/onevcat/Kingfisher.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 8.1.3;
+			};
+		};
+		801107F82D13A0A3009F6F3F /* XCRemoteSwiftPackageReference "Cache" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/hyperoslo/Cache.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 7.4.0;
+			};
+		};
+		80A698EB2D32D26800CED0CC /* XCRemoteSwiftPackageReference "Alamofire" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/Alamofire/Alamofire.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.10.2;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		801107EC2D138159009F6F3F /* Kingfisher */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 801107EA2D1380CB009F6F3F /* XCRemoteSwiftPackageReference "Kingfisher" */;
+			productName = Kingfisher;
+		};
+		801107F92D13A0AD009F6F3F /* Cache */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 801107F82D13A0A3009F6F3F /* XCRemoteSwiftPackageReference "Cache" */;
+			productName = Cache;
+		};
+		80A698EC2D32D26800CED0CC /* Alamofire */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 80A698EB2D32D26800CED0CC /* XCRemoteSwiftPackageReference "Alamofire" */;
+			productName = Alamofire;
+		};
+/* End XCSwiftPackageProductDependency section */
+	};
+	rootObject = 809726142D0653AE006F1BE1 /* Project object */;
+}
