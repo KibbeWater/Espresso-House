@@ -62,7 +62,8 @@ struct MemberID: View {
                             currentTime = input
                         }
                     
-                    Text("Pin: 0000")
+                    // TODO: Pin source unknown — re-enable once we know where it comes from
+                    // Text("Pin: 0000")
                 }
             }
             .padding(.horizontal)
