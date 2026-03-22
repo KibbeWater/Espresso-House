@@ -20,7 +20,7 @@ struct MainView: View {
             HStack {
                 VStack {
                     Spacer()
-                    Text("Hi User!")
+                    Text("Hi \(viewModel.firstName)!")
                         .font(.title)
                         .fontWeight(.semibold)
                         .foregroundStyle(.white)
@@ -70,7 +70,11 @@ struct MainView: View {
                     }
                     .sheet(isPresented: $isProfileShown) {
                         NavigationStack {
-                            ProfileSheet(isPresented: $isProfileShown)
+                            ProfileSheet(
+                                isPresented: $isProfileShown,
+                                firstName: viewModel.firstName,
+                                lastName: viewModel.lastName
+                            )
                         }
                     }
                 }

@@ -12,6 +12,8 @@ struct ProfileSheet: View {
     let defaultPicture: URL = URL(string: "https://static.vecteezy.com/system/resources/previews/009/292/244/non_2x/default-avatar-icon-of-social-media-user-vector.jpg")!
     
     @Binding var isPresented: Bool
+    var firstName: String = ""
+    var lastName: String = ""
     
     var body: some View {
         VStack(spacing: 0) {
@@ -32,7 +34,7 @@ struct ProfileSheet: View {
                     }
                     .padding(.top)
                     
-                    Text("John Doe")
+                    Text("\(firstName) \(lastName)")
                         .fontWeight(.semibold)
                         .foregroundStyle(Color(uiColor: .label))
                     
