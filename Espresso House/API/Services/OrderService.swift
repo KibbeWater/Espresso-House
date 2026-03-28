@@ -58,11 +58,22 @@ class OrderService: OrderServiceProtocol {
     func getPaymentOptions() async throws -> [PaymentOption] {
         guard let memberId = SharedVars.shared.memberId else { throw EspressoAPIError.unauthorized }
 
-        // Payment tokens come from the member endpoint
+        // Payment tokens and balance come from the member endpoint
         let data = try await networkManager.requestData(endpoint: Endpoint.getMember(memberId))
 
         struct MemberPaymentResponse: Decodable {
             let paymentTokens: [PaymentToken]?
+            let balance: BalanceResponse?
+
+            struct BalanceResponse: Decodable {
+                let amount: Double
+                let currency: String
+                let countryCode: String
+
+                func toBalance() -> Balance {
+                    Balance(amount: amount, currency: currency, countryCode: countryCode)
+                }
+            }
         }
 
         struct PaymentToken: Decodable {
@@ -113,13 +124,22 @@ class OrderService: OrderServiceProtocol {
             }
         }
 
+        var options: [PaymentOption] = []
         let decoder = JSONDecoder()
-        if let response = try? decoder.decode(MemberPaymentResponse.self, from: data),
-           let tokens = response.paymentTokens, !tokens.isEmpty {
-            return tokens.map { $0.toPaymentOption() }
+
+        if let response = try? decoder.decode(MemberPaymentResponse.self, from: data) {
+            // Always include the CoffeeCard so checkout can offer top-up
+            if let bal = response.balance {
+                options.append(.coffeeCard(memberId: memberId, balance: bal.toBalance()))
+            }
+
+            // Add credit card tokens
+            if let tokens = response.paymentTokens, !tokens.isEmpty {
+                options.append(contentsOf: tokens.map { $0.toPaymentOption() })
+            }
         }
 
-        return []
+        return options
     }
 
     func getPickupOptions(shopNumber: String) async throws -> [PickupOption] {
@@ -159,5 +179,21 @@ class OrderService: OrderServiceProtocol {
             endpoint: Endpoint.getActiveOrders(memberId: memberId)
         )
         return response.orders ?? []
+    }
+
+    func createDirectPayment(request: StartDirectPaymentRequest) async throws -> StartDirectPaymentResponse {
+        guard let memberId = SharedVars.shared.memberId else { throw EspressoAPIError.unauthorized }
+        return try await networkManager.post(
+            endpoint: Endpoint.createDirectPayment(memberId: memberId),
+            body: request,
+            authenticated: true
+        )
+    }
+
+    func getPaymentTransactionStatus(transactionKey: String) async throws -> PaymentTransactionResponse {
+        guard let memberId = SharedVars.shared.memberId else { throw EspressoAPIError.unauthorized }
+        return try await networkManager.request(
+            endpoint: Endpoint.getPaymentTransaction(memberId: memberId, transactionKey: transactionKey)
+        )
     }
 }

@@ -18,6 +18,7 @@ struct CheckoutView: View {
     @State private var viewModel = CheckoutViewModel()
     @State private var memberName = ""
     @State private var showActiveOrder = false
+    @State private var showTopUp = false
 
     private var orderService: any OrderServiceProtocol {
         #if DEBUG
@@ -108,6 +109,18 @@ struct CheckoutView: View {
                 dismiss()
             }
         }
+        .sheet(isPresented: $showTopUp, onDismiss: {
+            Task { await viewModel.loadPaymentOptions(api: orderService) }
+        }) {
+            TopUpView()
+        }
+        .fullScreenCover(isPresented: $viewModel.showDirectPaymentWebView, onDismiss: {
+            Task { await viewModel.completeDirectPayment(cart: cart) }
+        }) {
+            if let url = viewModel.directPaymentURL {
+                WebViewSheet(url: url, title: "Complete Payment")
+            }
+        }
     }
 
     // MARK: - Sections
@@ -190,9 +203,13 @@ struct CheckoutView: View {
                     .padding(.vertical, 8)
             } else {
                 ForEach(viewModel.paymentOptions) { option in
+                    let insufficientBalance = option.isCoffeeCard && viewModel.coffeeCardBalance < cart.totalPrice
+
                     Button {
-                        withAnimation {
-                            viewModel.selectedPayment = option
+                        if !insufficientBalance {
+                            withAnimation {
+                                viewModel.selectedPayment = option
+                            }
                         }
                     } label: {
                         HStack {
@@ -203,11 +220,26 @@ struct CheckoutView: View {
                             VStack(alignment: .leading) {
                                 Text(option.displayLabel)
                                     .fontWeight(.medium)
-                                    .foregroundStyle(.primary)
+                                    .foregroundStyle(insufficientBalance ? .secondary : .primary)
                                 if let expiry = option.expiryDate {
                                     Text("Expires \(expiry)")
                                         .font(.caption)
                                         .foregroundStyle(.secondary)
+                                }
+                                if insufficientBalance {
+                                    HStack(spacing: 4) {
+                                        Text("Insufficient balance")
+                                            .font(.caption)
+                                            .foregroundStyle(.red)
+                                        Text("·")
+                                            .font(.caption)
+                                            .foregroundStyle(.secondary)
+                                        Button("Top up") {
+                                            showTopUp = true
+                                        }
+                                        .font(.caption)
+                                        .fontWeight(.semibold)
+                                    }
                                 }
                             }
 
@@ -229,6 +261,7 @@ struct CheckoutView: View {
                         )
                         .clipShape(RoundedRectangle(cornerRadius: 12))
                     }
+                    .disabled(insufficientBalance)
                 }
             }
         }

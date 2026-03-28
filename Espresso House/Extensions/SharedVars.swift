@@ -7,6 +7,10 @@
 
 import Foundation
 
+enum NavigationAction {
+    case walletPaymentCards
+}
+
 class SharedVars: ObservableObject {
     public static let shared = SharedVars()
 
@@ -14,6 +18,8 @@ class SharedVars: ObservableObject {
     @Published var deviceId: String
     @Published var sharedSecret: String?
     @Published var smsCode: String?
+    @Published var selectedTab: Int = 0
+    @Published var pendingNavigation: NavigationAction?
 
     var isAuthenticated: Bool {
         memberId != nil && sharedSecret != nil && smsCode != nil

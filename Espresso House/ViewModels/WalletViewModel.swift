@@ -11,7 +11,10 @@ class WalletViewModel: ObservableObject {
     private var api = EspressoAPI.shared
     
     @Published var points: Int = 0
-    
+    @Published var balance: Balance?
+    @Published var coupons: [Coupon] = []
+    @Published var paymentCards: [PaymentOption] = []
+
     init() {
         Task {
             do {
@@ -21,12 +24,19 @@ class WalletViewModel: ObservableObject {
             }
         }
     }
-    
+
     func refresh() async throws {
-        let member = try await api.member.getMember()
-        
+        async let memberTask = api.member.getMember()
+        async let cardsTask = api.order.getPaymentOptions()
+
+        let member = try await memberTask
+        let allCards = (try? await cardsTask) ?? []
+
         await MainActor.run {
             self.points = member.fikaPoints
+            self.balance = member.balance
+            self.coupons = member.coupons
+            self.paymentCards = allCards.filter { !$0.isCoffeeCard }
         }
     }
 }

@@ -158,7 +158,17 @@ class MockOrderService: OrderServiceProtocol {
     }
 
     func getPaymentOptions() async throws -> [PaymentOption] {
-        [
+        let balance = DebugSettings.shared.mockCoffeeCardBalance
+        return [
+            PaymentOption(
+                paymentType: "CoffeeCard",
+                paymentIdentifier: "mock-member-id",
+                displayName: "Coffee Card (\(Int(balance)) SEK)",
+                cardBrand: nil,
+                maskedCardNumber: nil,
+                expiryDate: nil,
+                balanceAmount: balance
+            ),
             PaymentOption(
                 paymentType: "CreditCard",
                 paymentIdentifier: "mock-visa-4242",
@@ -253,6 +263,22 @@ class MockOrderService: OrderServiceProtocol {
                 ]
             )
         ]
+    }
+
+    func createDirectPayment(request: StartDirectPaymentRequest) async throws -> StartDirectPaymentResponse {
+        try await Task.sleep(for: .milliseconds(300))
+        return StartDirectPaymentResponse(
+            terminalUrl: "https://example.com/mock-paypal",
+            paymentTransactionKey: UUID().uuidString,
+            paymentDirectlyPaid: false
+        )
+    }
+
+    func getPaymentTransactionStatus(transactionKey: String) async throws -> PaymentTransactionResponse {
+        PaymentTransactionResponse(
+            paymentTransactionKey: transactionKey,
+            paymentTransactionState: "Completed"
+        )
     }
 }
 #endif

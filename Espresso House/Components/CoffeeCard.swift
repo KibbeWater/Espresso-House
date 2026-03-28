@@ -8,18 +8,21 @@
 import SwiftUI
 
 struct CoffeeCard: View {
+    var balance: Balance?
+    var onTopUp: (() -> Void)?
+
     @State private var showInfo = false
-    
+
     var body: some View {
         VStack {
-            Text("0 kr")
+            Text("\(Int(balance?.amount ?? 0)) \(balance?.currency ?? "kr")")
                 .font(.title2)
                 .fontWeight(.semibold)
-            Text("Coffe card balance")
+            Text("Coffee card balance")
                 .font(.title3)
                 .fontWeight(.medium)
             Button("Top up") {
-                
+                onTopUp?()
             }
             .buttonStyle(.plain)
             .padding(.vertical, 12)
@@ -56,13 +59,13 @@ struct CoffeeCard: View {
     VStack {
         Spacer()
         
-        CoffeeCard()
+        CoffeeCard(balance: Balance(amount: 450, currency: "SEK", countryCode: "SE"))
             .clipShape(RoundedRectangle(cornerRadius: 18))
             .padding()
-        
+
         Spacer()
-        
-        CoffeeCard()
+
+        CoffeeCard(balance: nil)
         
         Spacer()
     }

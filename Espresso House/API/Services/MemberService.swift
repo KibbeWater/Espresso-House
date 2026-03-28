@@ -30,6 +30,32 @@ class MemberService: MemberServiceProtocol {
         let req: ChallengeResult = try await networkManager.request(endpoint: Endpoint.getChallenges(memberId))
         return req.memberChallenges
     }
+
+    func getCardRegistrationURL() async throws -> String {
+        guard let memberId = SharedVars.shared.memberId else { throw EspressoAPIError.unauthorized }
+        let response: CardRegistrationResponse = try await networkManager.request(
+            endpoint: Endpoint.getCardRegistrationURL(memberId: memberId)
+        )
+        return response.paymentCardRegistrationUrl
+    }
+
+    func deletePaymentToken(tokenKey: String) async throws {
+        guard let memberId = SharedVars.shared.memberId else { throw EspressoAPIError.unauthorized }
+        try await networkManager.delete(
+            endpoint: Endpoint.deletePaymentToken(memberId: memberId, tokenKey: tokenKey)
+        )
+    }
+
+    func setPreferredPaymentToken(tokenKey: String) async throws {
+        guard let memberId = SharedVars.shared.memberId else { throw EspressoAPIError.unauthorized }
+        // PUT with empty body to set as preferred
+        struct EmptyBody: Encodable {}
+        try await networkManager.putRaw(
+            endpoint: Endpoint.setPreferredPaymentToken(memberId: memberId, tokenKey: tokenKey),
+            body: EmptyBody(),
+            authenticated: true
+        )
+    }
 }
 
 fileprivate struct ChallengeResult: Decodable {
@@ -43,7 +69,7 @@ fileprivate struct MemberResponse: Decodable {
     let firstName: String
     let lastName: String
     let phoneNumber: String
-    let email: String
+    let email: String?
     
     let coupons: [Coupon]
     let balance: BBalance

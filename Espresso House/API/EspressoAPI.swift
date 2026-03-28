@@ -15,6 +15,7 @@ public class EspressoAPI: ObservableObject {
     public let fika: FikaServiceProtocol
     let order: any OrderServiceProtocol
     let auth: AuthServiceProtocol
+    let topUp: TopUpServiceProtocol
 
     public static let shared = EspressoAPI()
 
@@ -27,5 +28,6 @@ public class EspressoAPI: ObservableObject {
         self.fika = FikaService(networkManager: networkManager)
         self.auth = AuthService(networkManager: networkManager)
         self.order = OrderService(networkManager: networkManager)
+        self.topUp = TopUpService(networkManager: networkManager)
     }
 }

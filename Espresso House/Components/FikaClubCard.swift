@@ -13,9 +13,6 @@ struct FikaClubCard: View {
     var body: some View {
         VStack(spacing:0) {
             HStack {
-                HStack {}
-                    .frame(width: 48)
-                    .background(.red)
                 Text("Fika Points")
                     .font(.title2)
                     .fontWeight(.semibold)
@@ -28,7 +25,7 @@ struct FikaClubCard: View {
                     .font(.system(size: 64))
                     .fontWeight(.bold)
                     .foregroundStyle(Color.accentColor)
-                    .frame(width: 48)
+                    .fixedSize(horizontal: true, vertical: false)
                 Text("Choose your rewards in\nFika House")
                     .font(.system(size: 18))
                     .fontWeight(.medium)

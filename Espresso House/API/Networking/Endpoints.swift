@@ -45,6 +45,24 @@ enum Endpoint: Endpoints {
     // Payment
     case getPaymentOptions(countryCode: String, memberId: String)
 
+    // Top-up
+    case getTopUpValues(memberId: String)
+    case getTopUpPaymentOptions(memberId: String)
+    case topUpCreditCard(memberId: String)
+    case topUpSwish(memberId: String)
+
+    // Events
+    case getMemberEvents(memberId: String)
+
+    // Card registration & management
+    case getCardRegistrationURL(memberId: String)
+    case deletePaymentToken(memberId: String, tokenKey: String)
+    case setPreferredPaymentToken(memberId: String, tokenKey: String)
+
+    // DirectPayment (PayPal)
+    case createDirectPayment(memberId: String)
+    case getPaymentTransaction(memberId: String, transactionKey: String)
+
     var url: URL {
         switch self {
         case .getMenu: return Self.baseURL.appendingPathComponent("/DoeApi/api/Market/v1/menu/se/en")
@@ -93,6 +111,34 @@ enum Endpoint: Endpoints {
 
         case .getPaymentOptions(let countryCode, let memberId):
             return Self.baseURL.appendingPathComponent("/DoeApi/api/Market/v1/paymentoption/\(countryCode)/\(memberId)")
+
+        // Top-up
+        case .getTopUpValues(let memberId):
+            return Self.baseURL.appendingPathComponent("/beproud/api/TopUp/v2/\(memberId)/topupvalues")
+        case .getTopUpPaymentOptions(let memberId):
+            return Self.baseURL.appendingPathComponent("/beproud/api/TopUp/v2/\(memberId)/paymentoptions")
+        case .topUpCreditCard(let memberId):
+            return Self.baseURL.appendingPathComponent("/beproud/api/TopUp/v1/\(memberId)")
+        case .topUpSwish(let memberId):
+            return Self.baseURL.appendingPathComponent("/beproud/api/TopUp/v1/\(memberId)/swish")
+
+        // Events
+        case .getMemberEvents(let memberId):
+            return Self.baseURL.appendingPathComponent("/beproud/api/Member/v1/\(memberId)/event")
+
+        // Card registration & management
+        case .getCardRegistrationURL(let memberId):
+            return Self.baseURL.appendingPathComponent("/beproud/api/PaymentCardRegistration/v1/\(memberId)")
+        case .deletePaymentToken(let memberId, let tokenKey):
+            return Self.baseURL.appendingPathComponent("/beproud/api/Member/v1/\(memberId)/paymentToken/\(tokenKey)")
+        case .setPreferredPaymentToken(let memberId, let tokenKey):
+            return Self.baseURL.appendingPathComponent("/beproud/api/Member/v1/\(memberId)/paymentToken/\(tokenKey)")
+
+        // DirectPayment
+        case .createDirectPayment(let memberId):
+            return Self.baseURL.appendingPathComponent("/beproud/api/Psp/v1/member/\(memberId)/directpayment")
+        case .getPaymentTransaction(let memberId, let transactionKey):
+            return Self.baseURL.appendingPathComponent("/beproud/api/Member/v1/\(memberId)/paymenttransaction/\(transactionKey)")
         }
     }
 }

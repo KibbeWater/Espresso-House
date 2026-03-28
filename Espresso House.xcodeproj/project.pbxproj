@@ -35,9 +35,22 @@
 		809726382D0653B0006F1BE1 /* Espresso HouseUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Espresso HouseUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		803CD1F52F7852EF000B7F62 /* Exceptions for "Espresso House" folder in "Espresso House" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				"Espresso-House-Info.plist",
+			);
+			target = 8097261B2D0653AE006F1BE1 /* Espresso House */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		8097261E2D0653AE006F1BE1 /* Espresso House */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				803CD1F52F7852EF000B7F62 /* Exceptions for "Espresso House" folder in "Espresso House" target */,
+			);
 			path = "Espresso House";
 			sourceTree = "<group>";
 		};
@@ -425,6 +438,7 @@
 				DEVELOPMENT_TEAM = 89625ZHN6X;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "Espresso-House-Info.plist";
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Find nearby Shops";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -456,6 +470,7 @@
 				DEVELOPMENT_TEAM = 89625ZHN6X;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "Espresso-House-Info.plist";
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Find nearby Shops";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;

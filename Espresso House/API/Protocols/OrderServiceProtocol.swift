@@ -16,4 +16,6 @@ protocol OrderServiceProtocol {
     func confirmOrder(digitalOrderKey: String, request: OrderConfirmRequest) async throws -> OrderCreateResponse
     func finalizeOrder(digitalOrderKey: String, request: OrderFinalizeRequest) async throws
     func getActiveOrders() async throws -> [ActiveOrder]
+    func createDirectPayment(request: StartDirectPaymentRequest) async throws -> StartDirectPaymentResponse
+    func getPaymentTransactionStatus(transactionKey: String) async throws -> PaymentTransactionResponse
 }

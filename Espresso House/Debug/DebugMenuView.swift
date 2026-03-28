@@ -17,13 +17,39 @@ struct DebugMenuView: View {
     var body: some View {
         NavigationStack {
             List {
-                Section("Order Simulation") {
-                    Toggle("Simulate Order Flow", isOn: $debugSettings.isSimulating)
+                Section("Simulation") {
+                    Toggle("Simulate Orders & Top-Ups", isOn: $debugSettings.isSimulating)
 
                     if debugSettings.isSimulating {
-                        Text("When enabled, the checkout flow uses mock data instead of real API calls. An orange banner will be shown.")
+                        Text("When enabled, checkout and top-up flows use mock data instead of real API calls. Orange banners will be shown.")
                             .font(.caption)
                             .foregroundStyle(.secondary)
+                    }
+                }
+
+                if debugSettings.isSimulating {
+                    Section("Coffee Card Balance") {
+                        HStack {
+                            Text("Balance")
+                            Spacer()
+                            Text("\(Int(debugSettings.mockCoffeeCardBalance)) SEK")
+                                .foregroundStyle(.secondary)
+                        }
+
+                        Stepper(
+                            "Adjust",
+                            value: $debugSettings.mockCoffeeCardBalance,
+                            in: 0...2000,
+                            step: 50
+                        )
+
+                        Button("Set to 0 (test insufficient balance)") {
+                            debugSettings.mockCoffeeCardBalance = 0
+                        }
+
+                        Button("Reset to 450") {
+                            debugSettings.mockCoffeeCardBalance = 450
+                        }
                     }
                 }
 

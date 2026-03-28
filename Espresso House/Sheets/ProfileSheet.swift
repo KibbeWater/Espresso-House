@@ -43,6 +43,31 @@ struct ProfileSheet: View {
                     }
                     .padding(.bottom)
                     
+                    Button {
+                        SharedVars.shared.pendingNavigation = .walletPaymentCards
+                        SharedVars.shared.selectedTab = 1
+                        isPresented = false
+                    } label: {
+                        HStack {
+                            Image(systemName: "creditcard")
+                                .padding(8)
+                                .background(Color.accentColor.opacity(0.2))
+                                .foregroundStyle(Color.accentColor)
+                                .clipShape(Circle())
+                                .padding(.trailing, 10)
+
+                            Text("Payment Cards")
+                                .foregroundStyle(Color(uiColor: .label))
+                                .fontWeight(.medium)
+
+                            Spacer()
+
+                            Image(systemName: "chevron.right")
+                                .foregroundStyle(.secondary)
+                        }
+                    }
+                    .padding(.horizontal)
+
                     NavigationLink {
                         Text("Delete")
                     } label: {

@@ -12,7 +12,7 @@ public struct Member: Sendable, Identifiable {
     
     public var firstName: String
     public var lastName: String
-    public var email: String
+    public var email: String?
     public var phoneNumber: String
     
     public var fikaPoints: Int

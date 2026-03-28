@@ -70,13 +70,14 @@ struct Root: App {
     var body: some Scene {
         WindowGroup {
             if sharedVars.isAuthenticated {
-                TabView {
+                TabView(selection: $sharedVars.selectedTab) {
                     NavigationStack {
                         MainView()
                     }
                     .tabItem {
                         Label("Start", systemImage: "house")
                     }
+                    .tag(0)
 
                     NavigationStack {
                         WalletView()
@@ -84,6 +85,7 @@ struct Root: App {
                     .tabItem {
                         Label("Wallet", systemImage: "wallet.bifold")
                     }
+                    .tag(1)
 
                     NavigationStack {
                         ShopsView()
@@ -91,6 +93,7 @@ struct Root: App {
                     .tabItem {
                         Label("Order", systemImage: "takeoutbag.and.cup.and.straw")
                     }
+                    .tag(2)
 
                     NavigationStack {
                         ShopsView()
@@ -98,6 +101,7 @@ struct Root: App {
                     .tabItem {
                         Label("More", systemImage: "ellipsis")
                     }
+                    .tag(3)
                 }
                 .environment(\.espressoAPI, api)
                 .environment(\.activeOrderVM, activeOrderVM)
