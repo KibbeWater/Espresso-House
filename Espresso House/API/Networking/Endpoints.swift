@@ -27,6 +27,24 @@ enum Endpoint: Endpoints {
     case sendSMS(String)
     case verify(String)
 
+    // Shop menu & ordering
+    case getShopMenu(shopNumber: String, memberId: String)
+    case getArticleConfiguration(shopNumber: String, articleNumbers: [String])
+    case getPickupOptions(shopNumber: String)
+    case getShopStatus(shopNumber: String)
+    case getShopInventory(shopNumber: String)
+    case getUpsell(shopNumber: String, memberId: String)
+
+    // Orders
+    case createOrder
+    case confirmOrder(digitalOrderKey: String)
+    case finalizeOrder(digitalOrderKey: String)
+    case getActiveOrders(memberId: String)
+    case getPreviousPurchases(memberId: String)
+
+    // Payment
+    case getPaymentOptions(countryCode: String, memberId: String)
+
     var url: URL {
         switch self {
         case .getMenu: return Self.baseURL.appendingPathComponent("/DoeApi/api/Market/v1/menu/se/en")
@@ -37,6 +55,44 @@ enum Endpoint: Endpoints {
         case .register: return Self.baseURL.appendingPathComponent("/beproud/api/registration/v2")
         case .sendSMS(let id): return Self.baseURL.appendingPathComponent("/beproud/api/registration/v1/\(id)/sendsms")
         case .verify(let id): return Self.baseURL.appendingPathComponent("/beproud/api/registration/v1/\(id)/verify")
+
+        case .getShopMenu(let shopNumber, let memberId):
+            let formatter = DateFormatter()
+            formatter.dateFormat = "yyyy-MM-dd'T'h:mm:ss.SSS a"
+            formatter.locale = Locale(identifier: "en_US_POSIX")
+            let menuTime = formatter.string(from: Date())
+            var components = URLComponents(string: Self.baseURL.absoluteString + "/DoeApi/api/Shop/v3/\(shopNumber)/menu/\(memberId)")!
+            components.queryItems = [
+                URLQueryItem(name: "MenuTime", value: menuTime),
+                URLQueryItem(name: "myEspressoHouseNumber", value: memberId),
+                URLQueryItem(name: "shopNumber", value: shopNumber),
+            ]
+            return components.url!
+        case .getArticleConfiguration(let shopNumber, let articleNumbers):
+            let articles = articleNumbers.joined(separator: ",")
+            return URL(string: Self.baseURL.absoluteString + "/DoeApi/api/ArticleConfiguration/v3/Configuration/\(shopNumber)/\(articles)")!
+        case .getPickupOptions(let shopNumber):
+            return Self.baseURL.appendingPathComponent("/DoeApi/api/Shop/v1/\(shopNumber)/PickupOptions")
+        case .getShopInventory(let shopNumber):
+            return Self.baseURL.appendingPathComponent("/DoeApi/api/Shop/v1/\(shopNumber)/inventory")
+        case .getShopStatus(let shopNumber):
+            return Self.baseURL.appendingPathComponent("/DoeApi/api/Shop/v1/\(shopNumber)/status")
+        case .getUpsell(let shopNumber, let memberId):
+            return Self.baseURL.appendingPathComponent("/DoeApi/api/Shop/v3/\(shopNumber)/upsell/\(memberId)")
+
+        case .createOrder:
+            return Self.baseURL.appendingPathComponent("/DoeApi/api/Order/v3")
+        case .confirmOrder(let digitalOrderKey):
+            return Self.baseURL.appendingPathComponent("/DoeApi/api/Order/v3/\(digitalOrderKey)")
+        case .finalizeOrder(let digitalOrderKey):
+            return Self.baseURL.appendingPathComponent("/DoeApi/api/Order/v3/\(digitalOrderKey)/Finalize")
+        case .getActiveOrders(let memberId):
+            return Self.baseURL.appendingPathComponent("/DoeApi/api/Order/v2/member/\(memberId)")
+        case .getPreviousPurchases(let memberId):
+            return Self.baseURL.appendingPathComponent("/DoeApi/api/Order/previouspurchase/v1/\(memberId)")
+
+        case .getPaymentOptions(let countryCode, let memberId):
+            return Self.baseURL.appendingPathComponent("/DoeApi/api/Market/v1/paymentoption/\(countryCode)/\(memberId)")
         }
     }
 }

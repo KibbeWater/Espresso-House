@@ -73,6 +73,8 @@ struct ShopsView: View {
     @State private var shouldShowSearch: Bool = false
     @State private var searchText: String = ""
 
+    @Environment(\.activeOrderVM) private var activeOrderVM
+
     private let radiusInKm: Double = 5.0
     
     private var nearbyLocations: [CoffeeShop] {

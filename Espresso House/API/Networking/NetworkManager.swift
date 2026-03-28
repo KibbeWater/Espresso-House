@@ -38,13 +38,37 @@ class NetworkManager {
     }
 
     func request<T: Decodable>(endpoint: Endpoints) async throws -> T {
+        print("[Network] GET \(endpoint.url)")
         let req = AF.request(endpoint.url, headers: buildHeaders(authenticated: true)).serializingDecodable(T.self)
 
         let res = await req.response
+        let statusCode = res.response?.statusCode
+        print("[Network] GET \(endpoint.url) – status: \(statusCode.map(String.init) ?? "nil")")
 
         switch res.result {
         case .success(let success):
             return success
+        case .failure(let failure):
+            if let data = res.data, let body = String(data: data, encoding: .utf8) {
+                print("[Network] GET \(endpoint.url) – error body: \(body.prefix(2000))")
+            }
+            if failure.responseCode == 401 {
+                throw EspressoAPIError.unauthorized
+            }
+            throw EspressoAPIError.internalError(description: failure.localizedDescription)
+        }
+    }
+
+    func requestData(endpoint: Endpoints) async throws -> Data {
+        print("[Network] GET (raw) \(endpoint.url)")
+        let req = AF.request(endpoint.url, headers: buildHeaders(authenticated: true)).serializingData()
+        let res = await req.response
+        let statusCode = res.response?.statusCode
+        print("[Network] GET (raw) \(endpoint.url) – status: \(statusCode.map(String.init) ?? "nil")")
+
+        switch res.result {
+        case .success(let data):
+            return data
         case .failure(let failure):
             if failure.responseCode == 401 {
                 throw EspressoAPIError.unauthorized

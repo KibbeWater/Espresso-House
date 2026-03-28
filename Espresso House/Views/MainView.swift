@@ -11,10 +11,12 @@ import Kingfisher
 
 struct MainView: View {
     @StateObject var viewModel: MainViewModel = MainViewModel()
-    
+    @Environment(\.activeOrderVM) private var activeOrderVM
+
     @State var isIdShown: Bool = false
     @State var isProfileShown: Bool = false
-    
+    @State var showActiveOrder: Bool = false
+
     var body: some View {
         VStack(spacing: 0) {
             HStack {
@@ -84,6 +86,33 @@ struct MainView: View {
             .padding([.horizontal, .vertical])
             .background(.accent)
             
+            // Active order banner
+            if activeOrderVM.hasActiveOrder {
+                Button {
+                    showActiveOrder = true
+                } label: {
+                    HStack {
+                        Image(systemName: "cup.and.saucer.fill")
+                        VStack(alignment: .leading, spacing: 2) {
+                            Text("Your order is in progress")
+                                .fontWeight(.semibold)
+                                .font(.subheadline)
+                            if let order = activeOrderVM.latestOrder {
+                                Text(order.status ?? "Processing")
+                                    .font(.caption)
+                                    .opacity(0.8)
+                            }
+                        }
+                        Spacer()
+                        Image(systemName: "chevron.right")
+                    }
+                    .padding(.horizontal)
+                    .padding(.vertical, 12)
+                    .background(Color.accentColor)
+                    .foregroundColor(.white)
+                }
+            }
+
             ScrollView {
                 VStack(spacing: 0) {
                     NavigationLink {
@@ -167,6 +196,9 @@ struct MainView: View {
             }
             
             Spacer()
+        }
+        .navigationDestination(isPresented: $showActiveOrder) {
+            ActiveOrderView()
         }
     }
 }

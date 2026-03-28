@@ -9,8 +9,8 @@ import SwiftUI
 import Kingfisher
 
 struct ProductCard: View {
-    let product: MenuProduct
-    
+    let product: ShopMasterProduct
+
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
             VStack {
@@ -27,21 +27,26 @@ struct ProductCard: View {
                         .resizable()
                         .aspectRatio(contentMode: .fit)
                 } else {
-                    Image("cross")
+                    Image(systemName: "cup.and.saucer")
+                        .font(.system(size: 40))
+                        .foregroundStyle(.secondary)
                 }
                 Spacer()
             }
             .frame(width: 172, height: 132)
             .background(.background.opacity(0.2))
-            
+
             VStack(alignment: .leading) {
                 Text(product.name)
                     .foregroundStyle(.primary)
                     .fontWeight(.medium)
                     .multilineTextAlignment(.leading)
                     .lineLimit(1)
-                Text("32kr")
-                    .foregroundStyle(.primary)
+                if let price = product.displayPrice, price > 0 {
+                    Text("from \(Int(price)) \(product.currency)")
+                        .foregroundStyle(.secondary)
+                        .font(.subheadline)
+                }
             }
             .padding(.leading)
             .padding(.vertical, 8)
@@ -52,11 +57,11 @@ struct ProductCard: View {
 
 #Preview {
     ProductCard(
-        product: MenuProduct(
+        product: ShopMasterProduct(
             name: "Breakfast",
             image: "https://pim-espressohouse.azureedge.net/Products/LTO/2024/BLOCK%201/BUNDLES/BBUNDLE_BREAKFAST_LATTE_TOAST_MULTIGRAIN_EGG_BACON_DE.png",
             menuTags: [],
-            defaultArticleNumber: "hello"
+            configurations: []
         )
     )
     .clipShape(RoundedRectangle(cornerRadius: 24))

@@ -14,6 +14,11 @@ struct Root: App {
     @State private var isUpsideDown = false
     @StateObject private var sharedVars = SharedVars.shared
     @Environment(\.espressoAPI) var api: EspressoAPI
+    @State private var activeOrderVM = ActiveOrderViewModel()
+
+    #if DEBUG
+    @State private var showDebugMenu = false
+    #endif
 
     var sharedModelContainer: ModelContainer = {
         let schema = Schema([
@@ -95,6 +100,7 @@ struct Root: App {
                     }
                 }
                 .environment(\.espressoAPI, api)
+                .environment(\.activeOrderVM, activeOrderVM)
                 .sensitiveUpsideDownDetection(isUpsideDown: $isUpsideDown)
                 .overlay {
                     ZStack {
@@ -120,7 +126,22 @@ struct Root: App {
                     checkStorage()
                     print("Prefetch images")
                     prefetchMenu()
+                    // Check for active orders on launch
+                    Task {
+                        await activeOrderVM.fetchOrders(api: api.order)
+                        if activeOrderVM.hasActiveOrder {
+                            activeOrderVM.startPolling(api: api.order)
+                        }
+                    }
                 }
+                #if DEBUG
+                .onReceive(NotificationCenter.default.publisher(for: .deviceDidShake)) { _ in
+                    showDebugMenu = true
+                }
+                .sheet(isPresented: $showDebugMenu) {
+                    DebugMenuView(activeOrderVM: activeOrderVM)
+                }
+                #endif
             } else {
                 LoginView()
             }
