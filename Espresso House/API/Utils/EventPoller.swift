@@ -7,9 +7,21 @@ import Foundation
 
 class EventPoller {
     private let topUpService: TopUpServiceProtocol
+    private var nudgeContinuation: CheckedContinuation<Void, Never>?
+    private let lock = NSLock()
 
     init(topUpService: TopUpServiceProtocol) {
         self.topUpService = topUpService
+    }
+
+    /// Signal the poller to check immediately.
+    /// Called when the app is foregrounded via a callback URL.
+    func nudge() {
+        lock.lock()
+        let continuation = nudgeContinuation
+        nudgeContinuation = nil
+        lock.unlock()
+        continuation?.resume()
     }
 
     /// Polls member events matching the Android app's strategy:
@@ -25,50 +37,63 @@ class EventPoller {
         let expectedNormalized = normalize(expectedType)
         let failureNormalized = failureTypes.map { normalize($0) }
 
-        print("[EventPoller] Starting poll for '\(expectedType)' (max \(maxRetries) retries)")
-
         for attempt in 1...maxRetries {
             try Task.checkCancellation()
 
-            do {
-                let events = try await topUpService.getMemberEvents()
-
-                if !events.isEmpty {
-                    let types = events.map { $0.eventType }
-                    print("[EventPoller] Attempt \(attempt): events = \(types)")
-                } else {
-                    if attempt <= 3 || attempt % 10 == 0 {
-                        print("[EventPoller] Attempt \(attempt): no events")
-                    }
-                }
-
-                if let successEvent = events.first(where: {
-                    normalize($0.eventType) == expectedNormalized
-                }) {
-                    print("[EventPoller] Matched success: \(successEvent.eventType)")
-                    return successEvent
-                }
-
-                if let failEvent = events.first(where: {
-                    failureNormalized.contains(normalize($0.eventType))
-                }) {
-                    print("[EventPoller] Matched failure: \(failEvent.eventType)")
-                    throw EventPollerError.eventFailed(failEvent.eventType)
-                }
-            } catch is CancellationError {
-                throw CancellationError()
-            } catch let error as EventPollerError {
-                throw error
-            } catch {
-                print("[EventPoller] Attempt \(attempt): fetch error: \(error.localizedDescription)")
+            if let result = try await checkEvents(expectedNormalized: expectedNormalized, failureNormalized: failureNormalized) {
+                return result
             }
 
+            // Wait for the delay OR a nudge, whichever comes first
             let delay = attempt <= shortDelayRetries ? shortDelay : longDelay
-            try await Task.sleep(for: .seconds(delay))
+            await waitOrNudge(seconds: delay)
         }
 
-        print("[EventPoller] Max retries exhausted")
         throw EventPollerError.timeout
+    }
+
+    private func checkEvents(expectedNormalized: String, failureNormalized: [String]) async throws -> MemberEvent? {
+        do {
+            let events = try await topUpService.getMemberEvents()
+
+            if let successEvent = events.first(where: {
+                normalize($0.eventType) == expectedNormalized
+            }) {
+                return successEvent
+            }
+
+            if let failEvent = events.first(where: {
+                failureNormalized.contains(normalize($0.eventType))
+            }) {
+                throw EventPollerError.eventFailed(failEvent.eventType)
+            }
+        } catch is CancellationError {
+            throw CancellationError()
+        } catch let error as EventPollerError {
+            throw error
+        } catch {
+            // Network error — continue polling
+        }
+
+        return nil
+    }
+
+    /// Sleeps for the given duration but wakes immediately if `nudge()` is called.
+    private func waitOrNudge(seconds: TimeInterval) async {
+        await withCheckedContinuation { (continuation: CheckedContinuation<Void, Never>) in
+            self.lock.withLock { nudgeContinuation = continuation }
+
+            // Schedule a timer to resume after the delay if not nudged
+            Task {
+                try? await Task.sleep(for: .seconds(seconds))
+                let pending = self.lock.withLock {
+                    let c = self.nudgeContinuation
+                    self.nudgeContinuation = nil
+                    return c
+                }
+                pending?.resume()
+            }
+        }
     }
 
     private func normalize(_ s: String) -> String {

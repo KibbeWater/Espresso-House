@@ -277,7 +277,11 @@ class MockOrderService: OrderServiceProtocol {
     func getPaymentTransactionStatus(transactionKey: String) async throws -> PaymentTransactionResponse {
         PaymentTransactionResponse(
             paymentTransactionKey: transactionKey,
-            paymentTransactionState: "Completed"
+            paymentTransactionState: "Completed",
+            paymentType: nil,
+            directPaymentMethod: nil,
+            amount: nil,
+            currency: nil
         )
     }
 }

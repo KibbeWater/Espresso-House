@@ -44,6 +44,7 @@ enum Endpoint: Endpoints {
 
     // Payment
     case getPaymentOptions(countryCode: String, memberId: String)
+    case getDirectPaymentMethods(countryCode: String, memberId: String, pspKey: String)
 
     // Top-up
     case getTopUpValues(memberId: String)
@@ -111,6 +112,8 @@ enum Endpoint: Endpoints {
 
         case .getPaymentOptions(let countryCode, let memberId):
             return Self.baseURL.appendingPathComponent("/DoeApi/api/Market/v1/paymentoption/\(countryCode)/\(memberId)")
+        case .getDirectPaymentMethods(let countryCode, let memberId, let pspKey):
+            return Self.baseURL.appendingPathComponent("/DoeApi/api/Market/v2/paymentoption/\(countryCode)/\(memberId)/\(pspKey)")
 
         // Top-up
         case .getTopUpValues(let memberId):

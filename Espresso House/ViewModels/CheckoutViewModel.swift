@@ -95,7 +95,7 @@ class CheckoutViewModel {
                     marketCountryCode: "SE", // TODO: derive from member
                     orderNumber: createResponse.orderNumber ?? orderKey,
                     orderType: "PreOrder",
-                    coffeeShopId: String(cart.shop.id)
+                    coffeeShopId: cart.shop.id
                 )
                 let dpResponse = try await api.createDirectPayment(request: dpRequest)
 
@@ -104,7 +104,7 @@ class CheckoutViewModel {
                     try await finalizeWithDirectPayment(orderKey: orderKey, memberId: memberId, api: api)
                 } else {
                     // Need user to complete payment in WebView
-                    directPaymentURL = URL(string: dpResponse.terminalUrl)
+                    directPaymentURL = dpResponse.terminalUrl.flatMap { URL(string: $0) }
                     directPaymentTransactionKey = dpResponse.paymentTransactionKey
                     completedOrderKey = orderKey
                     showDirectPaymentWebView = true

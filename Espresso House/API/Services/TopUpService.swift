@@ -68,22 +68,63 @@ class TopUpService: TopUpServiceProtocol {
         return response.swishPaymentRequestToken
     }
 
+    func getDirectPaymentMethods() async throws -> [DirectPaymentMethod] {
+        guard let memberId = SharedVars.shared.memberId else { throw EspressoAPIError.unauthorized }
+        // Same endpoint as getTopUpPaymentMethods but decoded as DirectPaymentMethod
+        let data = try await networkManager.requestData(endpoint: Endpoint.getTopUpPaymentOptions(memberId: memberId))
+        let decoder = JSONDecoder()
+
+        struct Wrapped: Decodable {
+            let topUpPaymentOptions: [DirectPaymentMethod]?
+            let paymentOptions: [DirectPaymentMethod]?
+        }
+        if let wrapped = try? decoder.decode(Wrapped.self, from: data),
+           let methods = wrapped.topUpPaymentOptions ?? wrapped.paymentOptions {
+            return methods
+        }
+        if let methods = try? decoder.decode([DirectPaymentMethod].self, from: data) {
+            return methods
+        }
+        return []
+    }
+
+    func createDirectPayment(request: StartDirectPaymentRequest) async throws -> StartDirectPaymentResponse {
+        guard let memberId = SharedVars.shared.memberId else { throw EspressoAPIError.unauthorized }
+
+        // Log raw request and response for debugging
+        let encoder = JSONEncoder()
+        if let reqData = try? encoder.encode(request),
+           let reqStr = String(data: reqData, encoding: .utf8) {
+            print("[DirectPayment] Request body: \(reqStr)")
+        }
+
+        let data = try await networkManager.postReturningData(
+            endpoint: Endpoint.createDirectPayment(memberId: memberId),
+            body: request,
+            authenticated: true
+        )
+        let raw = String(data: data.prefix(2000), encoding: .utf8) ?? ""
+        print("[DirectPayment] Response body: \(raw)")
+        return try JSONDecoder().decode(StartDirectPaymentResponse.self, from: data)
+    }
+
+    func getPaymentTransactionStatus(transactionKey: String) async throws -> PaymentTransactionResponse {
+        guard let memberId = SharedVars.shared.memberId else { throw EspressoAPIError.unauthorized }
+        return try await networkManager.request(
+            endpoint: Endpoint.getPaymentTransaction(memberId: memberId, transactionKey: transactionKey)
+        )
+    }
+
     func getMemberEvents() async throws -> [MemberEvent] {
         guard let memberId = SharedVars.shared.memberId else { throw EspressoAPIError.unauthorized }
         let data = try await networkManager.requestData(endpoint: Endpoint.getMemberEvents(memberId: memberId))
 
-        let rawString = String(data: data.prefix(2000), encoding: .utf8) ?? ""
-        print("[TopUpService] Events raw: \(rawString)")
-
-        // Try standard decoding first
         let decoder = JSONDecoder()
         if let response = try? decoder.decode(MemberEventsResponse.self, from: data),
            let events = response.events, !events.isEmpty {
-            print("[TopUpService] Decoded \(events.count) events: \(events.map { $0.eventType })")
             return events
         }
         if let events = try? decoder.decode([MemberEvent].self, from: data), !events.isEmpty {
-            print("[TopUpService] Decoded \(events.count) events (array): \(events.map { $0.eventType })")
             return events
         }
 
@@ -91,7 +132,6 @@ class TopUpService: TopUpServiceProtocol {
         if let json = try? JSONSerialization.jsonObject(with: data) as? [String: Any],
            let eventsArray = json["events"] as? [[String: Any]], !eventsArray.isEmpty {
             let parsed = eventsArray.compactMap { dict -> MemberEvent? in
-                // Accept both "eventName" and "eventType"
                 guard let name = (dict["eventName"] as? String) ?? (dict["eventType"] as? String) else { return nil }
                 return MemberEvent(
                     eventType: name,
@@ -101,7 +141,6 @@ class TopUpService: TopUpServiceProtocol {
                 )
             }
             if !parsed.isEmpty {
-                print("[TopUpService] Fallback parsed \(parsed.count) events: \(parsed.map { $0.eventType })")
                 return parsed
             }
         }

@@ -165,6 +165,26 @@ class NetworkManager {
         }
     }
 
+    func postReturningData(endpoint: Endpoints, body: some Encodable, authenticated: Bool = false) async throws -> Data {
+        let req = AF.request(
+            endpoint.url,
+            method: .post,
+            parameters: body,
+            encoder: JSONParameterEncoder.default,
+            headers: buildHeaders(authenticated: authenticated)
+        ).serializingData()
+
+        let res = await req.response
+
+        if let error = res.error {
+            if error.responseCode == 401 {
+                throw EspressoAPIError.unauthorized
+            }
+            throw EspressoAPIError.internalError(description: error.localizedDescription)
+        }
+        return res.data ?? Data()
+    }
+
     func postRaw(endpoint: Endpoints, body: some Encodable, authenticated: Bool = false) async throws {
         let req = AF.request(
             endpoint.url,

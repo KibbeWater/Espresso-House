@@ -9,13 +9,21 @@ import WebKit
 struct WebViewSheet: View {
     let url: URL
     let title: String
+    var onResponseOK: (() -> Void)?
+    var onResponseCancel: (() -> Void)?
     var onDismiss: (() -> Void)?
 
     @Environment(\.dismiss) private var dismiss
 
     var body: some View {
         NavigationStack {
-            WebViewController(url: url)
+            WebViewController(url: url, onResponseOK: {
+                onResponseOK?()
+                dismiss()
+            }, onResponseCancel: {
+                onResponseCancel?()
+                dismiss()
+            })
                 .ignoresSafeArea()
                 .navigationTitle(title)
                 .navigationBarTitleDisplayMode(.inline)
@@ -36,9 +44,11 @@ struct WebViewSheet: View {
 
 struct WebViewController: UIViewControllerRepresentable {
     let url: URL
+    var onResponseOK: (() -> Void)?
+    var onResponseCancel: (() -> Void)?
 
     func makeUIViewController(context: Context) -> WebViewHostController {
-        WebViewHostController(url: url)
+        WebViewHostController(url: url, onResponseOK: onResponseOK, onResponseCancel: onResponseCancel)
     }
 
     func updateUIViewController(_ uiViewController: WebViewHostController, context: Context) {}
@@ -50,6 +60,11 @@ class WebViewHostController: UIViewController, WKNavigationDelegate {
     private let spinner = UIActivityIndicatorView(style: .large)
     private var backgroundTaskID: UIBackgroundTaskIdentifier = .invalid
     private var processTerminated = false
+    private var initialLoadDone = false
+    private var responseHandled = false
+
+    var onResponseOK: (() -> Void)?
+    var onResponseCancel: (() -> Void)?
 
     // Recovery overlay shown when web process dies after backgrounding
     private lazy var recoveryOverlay: UIView = {
@@ -104,8 +119,10 @@ class WebViewHostController: UIViewController, WKNavigationDelegate {
         return overlay
     }()
 
-    init(url: URL) {
+    init(url: URL, onResponseOK: (() -> Void)? = nil, onResponseCancel: (() -> Void)? = nil) {
         self.url = url
+        self.onResponseOK = onResponseOK
+        self.onResponseCancel = onResponseCancel
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -168,7 +185,6 @@ class WebViewHostController: UIViewController, WKNavigationDelegate {
     // MARK: - Background task management
 
     @objc private func appDidEnterBackground() {
-        // Request background execution time to keep the web process alive
         backgroundTaskID = UIApplication.shared.beginBackgroundTask { [weak self] in
             self?.endBackgroundTask()
         }
@@ -194,10 +210,33 @@ class WebViewHostController: UIViewController, WKNavigationDelegate {
         webView.load(URLRequest(url: url))
     }
 
+    // MARK: - Response code detection
+
+    private func checkForResponseCode(in url: URL) {
+        guard initialLoadDone, !responseHandled else { return }
+
+        let urlString = url.absoluteString.lowercased()
+        if urlString.contains("responsecode=ok") {
+            responseHandled = true
+            onResponseOK?()
+        } else if urlString.contains("responsecode=cancel") {
+            responseHandled = true
+            onResponseCancel?()
+        }
+    }
+
     // MARK: - WKNavigationDelegate
+
+    func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction) async -> WKNavigationActionPolicy {
+        if let url = navigationAction.request.url {
+            checkForResponseCode(in: url)
+        }
+        return .allow
+    }
 
     func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
         spinner.stopAnimating()
+        initialLoadDone = true
         if !processTerminated {
             recoveryOverlay.isHidden = true
         }
@@ -208,8 +247,6 @@ class WebViewHostController: UIViewController, WKNavigationDelegate {
     }
 
     func webViewWebContentProcessDidTerminate(_ webView: WKWebView) {
-        // Don't auto-reload — the user may have completed authorization
-        // in another app. Show recovery UI instead.
         spinner.stopAnimating()
         processTerminated = true
         recoveryOverlay.isHidden = false

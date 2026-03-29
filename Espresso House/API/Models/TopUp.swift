@@ -16,12 +16,14 @@ struct TopUpValue: Codable, Identifiable, Hashable {
 
     let amount: Double
     let currency: String
+    let countryCode: String?
     let punchReward: Int?
 
     enum CodingKeys: String, CodingKey {
         case amount
-        case currency
-        case punchReward = "numberOfPunches"
+        case currency = "currencyCode"
+        case countryCode
+        case punchReward = "rewardPunchCount"
     }
 }
 
