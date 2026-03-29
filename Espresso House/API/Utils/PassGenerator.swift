@@ -7,6 +7,13 @@
 
 import Foundation
 import PassKit
+import CoreLocation
+
+struct PassLocation: Codable {
+    let latitude: Double
+    let longitude: Double
+    let relevantText: String?
+}
 
 enum PassGeneratorError: LocalizedError {
     case serverError(String)
@@ -32,7 +39,7 @@ struct PassGenerator {
 
     // MARK: - Public API
 
-    static func generatePass(memberId: String, firstName: String, lastName: String, pinCode: String? = nil) async throws -> PKPass {
+    static func generatePass(memberId: String, firstName: String, lastName: String, pinCode: String? = nil, locations: [PassLocation] = []) async throws -> PKPass {
         let url = URL(string: endpoint)!
 
         var request = URLRequest(url: url)
@@ -40,13 +47,25 @@ struct PassGenerator {
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
         request.setValue("Bearer \(apiKey)", forHTTPHeaderField: "Authorization")
 
-        var body: [String: String] = [
+        var body: [String: Any] = [
             "memberId": memberId,
             "firstName": firstName,
             "lastName": lastName
         ]
         if let pinCode {
             body["pinCode"] = pinCode
+        }
+        if !locations.isEmpty {
+            body["locations"] = locations.map { loc -> [String: Any] in
+                var dict: [String: Any] = [
+                    "latitude": loc.latitude,
+                    "longitude": loc.longitude
+                ]
+                if let text = loc.relevantText {
+                    dict["relevantText"] = text
+                }
+                return dict
+            }
         }
         request.httpBody = try JSONSerialization.data(withJSONObject: body)
 

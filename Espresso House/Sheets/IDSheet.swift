@@ -10,18 +10,26 @@ import SwiftUI
 struct IDSheet: View {
     @Environment(\.dismiss) private var dismiss
     var balance: Balance?
+    var pinCode: String?
+    var firstName: String?
+    var lastName: String?
 
     var body: some View {
         ScrollView {
             VStack(spacing: 16) {
-                MemberID(id: SharedVars.shared.memberId ?? "")
-                    .background(Color(uiColor: UIColor.systemBackground))
-                    .clipShape(RoundedRectangle(cornerRadius: 18))
-                    .overlay(
-                        RoundedRectangle(cornerRadius: 18)
-                            .stroke(.secondary.opacity(0.3), lineWidth: 1)
-                    )
-                    .padding(.horizontal)
+                MemberID(
+                    id: SharedVars.shared.memberId ?? "",
+                    pinCode: pinCode,
+                    firstName: firstName,
+                    lastName: lastName
+                )
+                .background(Color(uiColor: UIColor.systemBackground))
+                .clipShape(RoundedRectangle(cornerRadius: 18))
+                .overlay(
+                    RoundedRectangle(cornerRadius: 18)
+                        .stroke(.secondary.opacity(0.3), lineWidth: 1)
+                )
+                .padding(.horizontal)
 
                 CoffeeCard(balance: balance)
                     .clipShape(RoundedRectangle(cornerRadius: 18))

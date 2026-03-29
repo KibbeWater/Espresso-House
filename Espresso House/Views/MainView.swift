@@ -146,7 +146,12 @@ struct MainView: View {
                     }
                     .sheet(isPresented: $isIdShown) {
                         NavigationStack {
-                            IDSheet(balance: viewModel.balance)
+                            IDSheet(
+                                balance: viewModel.balance,
+                                pinCode: viewModel.pinCode,
+                                firstName: viewModel.firstName,
+                                lastName: viewModel.lastName
+                            )
                         }
                     }
 
