@@ -9,9 +9,29 @@ import Foundation
 
 @Observable
 class CheckoutViewModel {
+    enum OrderType: String, CaseIterable {
+        case takeAway = "PreOrderTakeAway"
+        case eatIn = "PreOrderEatIn"
+
+        var displayName: String {
+            switch self {
+            case .takeAway: return "Take Away"
+            case .eatIn: return "Eat In"
+            }
+        }
+
+        var icon: String {
+            switch self {
+            case .takeAway: return "bag.fill"
+            case .eatIn: return "fork.knife"
+            }
+        }
+    }
+
     var paymentOptions: [PaymentOption] = []
     var selectedPayment: PaymentOption?
     var coffeeCardBalance: Double = 0
+    var selectedOrderType: OrderType = .takeAway
     var isLoading = false
     var isProcessing = false
     var orderComplete = false
@@ -60,10 +80,12 @@ class CheckoutViewModel {
         do {
             let configurations = cart.buildConfigurations()
 
+            let orderType = selectedOrderType.rawValue
+
             // Step 1: Create order
             let createRequest = OrderCreateRequest(
                 shopNumber: String(cart.shop.id),
-                orderType: "PreOrderTakeAway",
+                orderType: orderType,
                 includeMemberDiscount: true,
                 customerDisplayName: memberName,
                 myEspressoHouseNumber: memberId,
@@ -75,7 +97,7 @@ class CheckoutViewModel {
             // Step 2: Confirm order
             let confirmRequest = OrderConfirmRequest(
                 shopNumber: String(cart.shop.id),
-                orderType: "PreOrderTakeAway",
+                orderType: orderType,
                 includeMemberDiscount: false,
                 customerDisplayName: memberName,
                 myEspressoHouseNumber: memberId,
@@ -125,6 +147,7 @@ class CheckoutViewModel {
 
             completedOrderKey = orderKey
             orderComplete = true
+            OrderHistory.shared.save(cart: cart)
             cart.clear()
         } catch {
             self.error = "Order failed: \(error.localizedDescription)"
@@ -165,6 +188,7 @@ class CheckoutViewModel {
             try await finalizeWithDirectPayment(orderKey: orderKey, memberId: memberId, api: api)
 
             orderComplete = true
+            OrderHistory.shared.save(cart: cart)
             cart.clear()
         } catch {
             self.error = "Payment failed: \(error.localizedDescription)"

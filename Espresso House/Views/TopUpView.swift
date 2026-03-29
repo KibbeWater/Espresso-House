@@ -13,14 +13,14 @@ struct TopUpView: View {
 
     private var topUpService: TopUpServiceProtocol {
         #if DEBUG
-        if DebugSettings.shared.isSimulating { return MockTopUpService() }
+        if DebugSettings.shared.isSimulating { return MockTopUpService.shared }
         #endif
         return api.topUp
     }
 
     private var orderService: any OrderServiceProtocol {
         #if DEBUG
-        if DebugSettings.shared.isSimulating { return MockOrderService() }
+        if DebugSettings.shared.isSimulating { return MockOrderService.shared }
         #endif
         return api.order
     }

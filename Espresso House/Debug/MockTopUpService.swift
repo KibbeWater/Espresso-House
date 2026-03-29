@@ -7,6 +7,7 @@
 import Foundation
 
 class MockTopUpService: TopUpServiceProtocol {
+    static let shared = MockTopUpService()
     func getTopUpValues() async throws -> [TopUpValue] {
         [
             TopUpValue(amount: 100, currency: "SEK", countryCode: "SE", punchReward: 2),

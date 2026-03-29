@@ -34,21 +34,22 @@ struct ProductCard: View {
                 Spacer()
             }
             .frame(width: 172, height: 132)
-            .background(.background.opacity(0.2))
+            .background(Color(.systemGray6))
 
-            VStack(alignment: .leading) {
+            VStack(alignment: .leading, spacing: 2) {
                 Text(product.name)
                     .foregroundStyle(.primary)
                     .fontWeight(.medium)
                     .multilineTextAlignment(.leading)
-                    .lineLimit(1)
+                    .lineLimit(2)
+                    .fixedSize(horizontal: false, vertical: true)
                 if let price = product.displayPrice, price > 0 {
                     Text("from \(Int(price)) \(product.currency)")
                         .foregroundStyle(.secondary)
-                        .font(.subheadline)
+                        .font(.caption)
                 }
             }
-            .padding(.leading)
+            .padding(.horizontal, 8)
             .padding(.vertical, 8)
         }
         .frame(width: 172)

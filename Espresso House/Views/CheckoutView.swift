@@ -23,7 +23,7 @@ struct CheckoutView: View {
     private var orderService: any OrderServiceProtocol {
         #if DEBUG
         if DebugSettings.shared.isSimulating {
-            return MockOrderService()
+            return MockOrderService.shared
         }
         #endif
         return api.order
@@ -100,6 +100,14 @@ struct CheckoutView: View {
         .onChange(of: viewModel.orderComplete) { _, complete in
             if complete {
                 activeOrderVM.startPolling(api: orderService)
+                #if DEBUG
+                if DebugSettings.shared.isSimulating {
+                    // In simulation: go to Home tab so user sees the active order banner
+                    SharedVars.shared.selectedTab = 0
+                    dismiss()
+                    return
+                }
+                #endif
                 showActiveOrder = true
             }
         }
@@ -272,18 +280,60 @@ struct CheckoutView: View {
             Text("Order Type")
                 .font(.headline)
 
-            HStack {
-                Image(systemName: "bag.fill")
-                Text("Take Away")
-                    .fontWeight(.medium)
-                Spacer()
-                Image(systemName: "checkmark")
-                    .foregroundStyle(Color.accentColor)
+            let takeAwayOnly = cart.shop.takeAwayOnly ?? false
+
+            if takeAwayOnly {
+                HStack {
+                    Image(systemName: "bag.fill")
+                    Text("Take Away")
+                        .fontWeight(.medium)
+                    Spacer()
+                    Image(systemName: "checkmark")
+                        .foregroundStyle(Color.accentColor)
+                }
+                .padding()
+                .background(Color(.systemGray6))
+                .clipShape(RoundedRectangle(cornerRadius: 12))
+            } else {
+                ForEach(CheckoutViewModel.OrderType.allCases, id: \.self) { type in
+                    Button {
+                        withAnimation {
+                            viewModel.selectedOrderType = type
+                        }
+                    } label: {
+                        HStack {
+                            Image(systemName: type.icon)
+                            Text(type.displayName)
+                                .fontWeight(.medium)
+                            Spacer()
+                            if viewModel.selectedOrderType == type {
+                                Image(systemName: "checkmark.circle.fill")
+                                    .foregroundStyle(Color.accentColor)
+                            } else {
+                                Image(systemName: "circle")
+                                    .foregroundStyle(.secondary)
+                            }
+                        }
+                        .foregroundStyle(.primary)
+                        .padding()
+                        .background(
+                            viewModel.selectedOrderType == type
+                                ? Color.accentColor.opacity(0.08)
+                                : Color(.systemGray6)
+                        )
+                        .clipShape(RoundedRectangle(cornerRadius: 12))
+                    }
+                }
             }
-            .padding()
-            .background(Color(.systemGray6))
-            .clipShape(RoundedRectangle(cornerRadius: 12))
         }
+    }
+
+    private var canPay: Bool {
+        guard let payment = viewModel.selectedPayment, !viewModel.isProcessing else { return false }
+        if payment.isCoffeeCard && viewModel.coffeeCardBalance < cart.totalPrice {
+            return false
+        }
+        return true
     }
 
     private var payButton: some View {
@@ -306,15 +356,11 @@ struct CheckoutView: View {
             .fontWeight(.bold)
             .frame(maxWidth: .infinity)
             .padding()
-            .background(
-                viewModel.selectedPayment != nil && !viewModel.isProcessing
-                    ? Color.accentColor
-                    : Color.gray
-            )
+            .background(canPay ? Color.accentColor : Color.gray)
             .foregroundColor(.white)
             .clipShape(RoundedRectangle(cornerRadius: 14))
             .padding()
         }
-        .disabled(viewModel.selectedPayment == nil || viewModel.isProcessing)
+        .disabled(!canPay)
     }
 }

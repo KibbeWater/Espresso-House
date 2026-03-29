@@ -56,8 +56,8 @@ class CartViewModel {
         items.isEmpty
     }
 
-    func addItem(product: ShopProduct) {
-        items.append(CartItem(product: product))
+    func addItem(product: ShopProduct, quantity: Int = 1) {
+        items.append(CartItem(product: product, quantity: quantity))
     }
 
     func removeItem(id: UUID) {

@@ -63,8 +63,7 @@ class ActiveOrderViewModel {
 
                     if isReady && (wasNotReady || notYetNotified) && notYetNotified {
                         self.notifiedOrderKeys.insert(order.digitalOrderKey)
-                        let generator = UINotificationFeedbackGenerator()
-                        generator.notificationOccurred(.success)
+                        self.playOrderReadyHaptic()
                     }
                 }
             }
@@ -80,6 +79,27 @@ class ActiveOrderViewModel {
         }
         if activeOrders.isEmpty {
             stopPolling()
+        }
+    }
+
+    /// Plays a prominent haptic burst pattern to grab attention
+    private func playOrderReadyHaptic() {
+        Task {
+            let heavy = UIImpactFeedbackGenerator(style: .heavy)
+            heavy.prepare()
+
+            // Three heavy buzzes with short pauses — noticeable even face-down
+            heavy.impactOccurred(intensity: 1.0)
+            try? await Task.sleep(for: .milliseconds(150))
+            heavy.impactOccurred(intensity: 1.0)
+            try? await Task.sleep(for: .milliseconds(150))
+            heavy.impactOccurred(intensity: 1.0)
+
+            try? await Task.sleep(for: .milliseconds(400))
+
+            // Finish with a success notification for the distinct "done" feel
+            let notification = UINotificationFeedbackGenerator()
+            notification.notificationOccurred(.success)
         }
     }
 

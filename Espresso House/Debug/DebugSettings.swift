@@ -13,8 +13,9 @@ class DebugSettings {
     static let shared = DebugSettings()
 
     var isSimulating = false
-    var mockOrderStatus: String = "Created"
+    var mockOrderStatus: String = "Auto"
     var mockCoffeeCardBalance: Double = 450
+    var fastMockProgression: Bool = false
 
     private init() {}
 }

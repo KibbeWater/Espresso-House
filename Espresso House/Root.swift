@@ -71,38 +71,25 @@ struct Root: App {
         WindowGroup {
             if sharedVars.isAuthenticated {
                 TabView(selection: $sharedVars.selectedTab) {
-                    NavigationStack {
-                        MainView()
+                    Tab("Start", systemImage: "house", value: 0) {
+                        NavigationStack {
+                            MainView()
+                        }
                     }
-                    .tabItem {
-                        Label("Start", systemImage: "house")
-                    }
-                    .tag(0)
 
-                    NavigationStack {
-                        WalletView()
+                    Tab("Wallet", systemImage: "wallet.bifold", value: 1) {
+                        NavigationStack {
+                            WalletView()
+                        }
                     }
-                    .tabItem {
-                        Label("Wallet", systemImage: "wallet.bifold")
-                    }
-                    .tag(1)
 
-                    NavigationStack {
-                        ShopsView()
+                    Tab("Order", systemImage: "takeoutbag.and.cup.and.straw", value: 2) {
+                        NavigationStack {
+                            ShopsView()
+                        }
                     }
-                    .tabItem {
-                        Label("Order", systemImage: "takeoutbag.and.cup.and.straw")
-                    }
-                    .tag(2)
-
-                    NavigationStack {
-                        ShopsView()
-                    }
-                    .tabItem {
-                        Label("More", systemImage: "ellipsis")
-                    }
-                    .tag(3)
                 }
+                .modifier(BottomAccessoryModifier(activeOrderVM: activeOrderVM))
                 .environment(\.espressoAPI, api)
                 .environment(\.activeOrderVM, activeOrderVM)
                 .sensitiveUpsideDownDetection(isUpsideDown: $isUpsideDown)
@@ -151,6 +138,72 @@ struct Root: App {
             }
         }
         .modelContainer(sharedModelContainer)
+    }
+}
+
+// MARK: - Bottom Accessory Modifier
+
+struct BottomAccessoryModifier: ViewModifier {
+    @Bindable var activeOrderVM: ActiveOrderViewModel
+
+    func body(content: Content) -> some View {
+        if #available(iOS 26.1, *) {
+            content
+                .tabViewBottomAccessory(isEnabled: activeOrderVM.hasActiveOrder) {
+                    ActiveOrderAccessory(activeOrderVM: activeOrderVM)
+                }
+        } else {
+            content
+        }
+    }
+}
+
+// MARK: - Active Order Bottom Accessory
+
+struct ActiveOrderAccessory: View {
+    @Bindable var activeOrderVM: ActiveOrderViewModel
+
+    var body: some View {
+        if let order = activeOrderVM.latestOrder {
+            HStack(spacing: 8) {
+                Image(systemName: statusIcon(for: order))
+                    .foregroundStyle(statusColor(for: order))
+                Text(statusText(for: order))
+                    .fontWeight(.medium)
+                    .lineLimit(1)
+                Spacer()
+                if let pin = order.orderPinCode {
+                    Text("PIN: \(pin)")
+                        .font(.caption)
+                        .fontWeight(.semibold)
+                }
+            }
+            .padding(.horizontal, 16)
+        }
+    }
+
+    private func statusIcon(for order: ActiveOrder) -> String {
+        let s = order.status?.lowercased() ?? ""
+        if s.contains("completed") || s.contains("delivered") { return "checkmark.circle.fill" }
+        if s.contains("ready") || s.contains("pickup") { return "cup.and.saucer.fill" }
+        if s.contains("preparing") || s.contains("inprogress") { return "flame.fill" }
+        return "clock.fill"
+    }
+
+    private func statusColor(for order: ActiveOrder) -> Color {
+        let s = order.status?.lowercased() ?? ""
+        if s.contains("completed") || s.contains("delivered") { return .green }
+        if s.contains("ready") || s.contains("pickup") { return .green }
+        if s.contains("preparing") || s.contains("inprogress") { return .orange }
+        return .accentColor
+    }
+
+    private func statusText(for order: ActiveOrder) -> String {
+        let s = order.status?.lowercased() ?? ""
+        if s.contains("completed") || s.contains("delivered") { return "Order complete" }
+        if s.contains("ready") || s.contains("pickup") { return "Order ready!" }
+        if s.contains("preparing") || s.contains("inprogress") { return "Preparing your order..." }
+        return "Order placed"
     }
 }
 

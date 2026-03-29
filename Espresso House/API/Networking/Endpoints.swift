@@ -77,7 +77,7 @@ enum Endpoint: Endpoints {
 
         case .getShopMenu(let shopNumber, let memberId):
             let formatter = DateFormatter()
-            formatter.dateFormat = "yyyy-MM-dd'T'h:mm:ss.SSS a"
+            formatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSS"
             formatter.locale = Locale(identifier: "en_US_POSIX")
             let menuTime = formatter.string(from: Date())
             var components = URLComponents(string: Self.baseURL.absoluteString + "/DoeApi/api/Shop/v3/\(shopNumber)/menu/\(memberId)")!

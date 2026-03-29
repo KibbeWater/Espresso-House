@@ -16,7 +16,7 @@ struct ActiveOrderView: View {
     private var orderService: any OrderServiceProtocol {
         #if DEBUG
         if DebugSettings.shared.isSimulating {
-            return MockOrderService()
+            return MockOrderService.shared
         }
         #endif
         return api.order
@@ -84,22 +84,44 @@ struct ActiveOrderView: View {
         return s.contains("ready") || s.contains("delivered") || s.contains("completed") || s.contains("pickup")
     }
 
+    private func formattedETA(for order: ActiveOrder) -> String? {
+        guard let etaString = order.estimatedPickupTime else { return nil }
+        let formatter = ISO8601DateFormatter()
+        guard let etaDate = formatter.date(from: etaString) else { return nil }
+        let timeFormatter = DateFormatter()
+        timeFormatter.dateFormat = "HH:mm"
+        return timeFormatter.string(from: etaDate)
+    }
+
+    private func isOrderCompleted(_ order: ActiveOrder) -> Bool {
+        let s = order.status?.lowercased() ?? ""
+        return s.contains("completed") || s.contains("delivered")
+    }
+
     @ViewBuilder
     private func successHeader(for order: ActiveOrder) -> some View {
         VStack(spacing: 12) {
+            let completed = isOrderCompleted(order)
             let ready = isOrderReady(order)
 
-            Image(systemName: ready ? "checkmark.circle.fill" : "clock.fill")
+            Image(systemName: completed ? "party.popper.fill" : ready ? "checkmark.circle.fill" : "clock.fill")
                 .font(.system(size: 56))
-                .foregroundStyle(ready ? .green : Color.accentColor)
+                .foregroundStyle(completed ? .orange : ready ? .green : Color.accentColor)
                 .symbolEffect(.bounce, value: ready)
 
-            Text(ready ? "Your order is ready!" : "Order placed!")
+            Text(completed ? "Order complete!" : ready ? "Your order is ready!" : "Order placed!")
                 .font(.title2)
                 .fontWeight(.bold)
 
             if let orderNumber = order.orderNumber {
                 Text("Order #\(orderNumber)")
+                    .font(.subheadline)
+                    .foregroundStyle(.secondary)
+            }
+
+            // Estimated pickup time
+            if !ready, let etaText = formattedETA(for: order) {
+                Text("Ready by ~\(etaText)")
                     .font(.subheadline)
                     .foregroundStyle(.secondary)
             }
@@ -120,13 +142,14 @@ struct ActiveOrderView: View {
     @ViewBuilder
     private func orderProgressView(for order: ActiveOrder) -> some View {
         let status = order.status?.lowercased() ?? ""
-        let isDelivered = status.contains("delivered") || status.contains("completed")
-        let isReady = status.contains("ready") || status.contains("pickup") || isDelivered
+        let isCompleted = status.contains("delivered") || status.contains("completed")
+        let isReady = status.contains("ready") || status.contains("pickup") || isCompleted
         let isPreparing = status.contains("preparing") || status.contains("inprogress") || isReady
         let steps: [(String, String, Bool)] = [
             ("Placed", "checkmark.circle.fill", true),
             ("Preparing", "flame.fill", isPreparing),
             ("Ready", "cup.and.saucer.fill", isReady),
+            ("Completed", "flag.checkered", isCompleted),
         ]
 
         VStack(spacing: 0) {
@@ -176,6 +199,18 @@ struct ActiveOrderView: View {
                     Image(systemName: "mappin.circle.fill")
                         .foregroundStyle(Color.accentColor)
                     Text(shopName)
+                    Spacer()
+                    if let lat = order.shopInformation?.latitude,
+                       let lon = order.shopInformation?.longitude {
+                        Button {
+                            let url = URL(string: "http://maps.apple.com/?daddr=\(lat),\(lon)&dirflg=w")!
+                            UIApplication.shared.open(url)
+                        } label: {
+                            Label("Directions", systemImage: "arrow.triangle.turn.up.right.diamond.fill")
+                                .font(.caption)
+                                .fontWeight(.medium)
+                        }
+                    }
                 }
             }
 

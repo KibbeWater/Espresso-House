@@ -33,7 +33,54 @@ public struct CoffeeShop: Codable, Identifiable, Hashable {
     
     public let todayOpenFrom: String
     public let todayOpenTo: String
-    
+
+    /// Parse "HH:mm:ss" into total minutes since midnight
+    private func parseMinutes(_ timeStr: String) -> Int? {
+        let parts = timeStr.split(separator: ":").compactMap { Int($0) }
+        guard parts.count >= 2 else { return nil }
+        return parts[0] * 60 + parts[1]
+    }
+
+    /// Whether the shop is currently open based on todayOpenFrom/todayOpenTo
+    public var isCurrentlyOpen: Bool {
+        guard let openMin = parseMinutes(todayOpenFrom),
+              let closeMin = parseMinutes(todayOpenTo) else {
+            return false
+        }
+
+        // Closed today: open == close (e.g. "00:00:00" to "00:00:00")
+        if openMin == closeMin { return false }
+
+        let calendar = Calendar.current
+        let now = Date()
+        let nowMin = calendar.component(.hour, from: now) * 60 + calendar.component(.minute, from: now)
+
+        if closeMin > openMin {
+            // Normal: e.g. 08:00–20:00
+            return nowMin >= openMin && nowMin < closeMin
+        } else {
+            // Overnight: e.g. 22:00–06:00
+            return nowMin >= openMin || nowMin < closeMin
+        }
+    }
+
+    /// Whether the shop is closed today (special hours / holiday)
+    public var isClosedToday: Bool {
+        guard let openMin = parseMinutes(todayOpenFrom),
+              let closeMin = parseMinutes(todayOpenTo) else {
+            return true
+        }
+        return openMin == closeMin
+    }
+
+    /// Formatted opening hours string (e.g. "08:00 – 20:00" or "Closed today")
+    public var formattedHours: String {
+        if isClosedToday { return "Closed today" }
+        let trimOpen = String(todayOpenFrom.prefix(5))
+        let trimClose = String(todayOpenTo.prefix(5))
+        return "\(trimOpen) – \(trimClose)"
+    }
+
     enum CodingKeys: String, CodingKey {
         case id = "coffeeShopId"
         case name = "coffeeShopName"

@@ -12,6 +12,7 @@ protocol OrderServiceProtocol {
     func getArticleConfigurations(shopNumber: String, articleNumbers: [String]) async throws -> [ShopProduct]
     func getPaymentOptions() async throws -> [PaymentOption]
     func getPickupOptions(shopNumber: String) async throws -> [PickupOption]
+    func getShopStatus(shopNumber: String) async throws -> ShopStatusResponse
     func createOrder(request: OrderCreateRequest) async throws -> OrderCreateResponse
     func confirmOrder(digitalOrderKey: String, request: OrderConfirmRequest) async throws -> OrderCreateResponse
     func finalizeOrder(digitalOrderKey: String, request: OrderFinalizeRequest) async throws

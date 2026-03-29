@@ -149,6 +149,12 @@ class OrderService: OrderServiceProtocol {
         return response.pickupOptions ?? []
     }
 
+    func getShopStatus(shopNumber: String) async throws -> ShopStatusResponse {
+        try await networkManager.request(
+            endpoint: Endpoint.getShopStatus(shopNumber: shopNumber)
+        )
+    }
+
     func createOrder(request: OrderCreateRequest) async throws -> OrderCreateResponse {
         try await networkManager.post(
             endpoint: Endpoint.createOrder,

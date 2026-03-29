@@ -91,6 +91,8 @@ struct ActiveOrder: Codable, Identifiable {
         let shopName: String?
         let address1: String?
         let city: String?
+        let latitude: Double?
+        let longitude: Double?
     }
 }
 
@@ -102,4 +104,22 @@ struct OrderConfiguration: Codable, Identifiable {
     let img: String?
     let navName: String?
     let shortDescription: String?
+}
+
+// MARK: - Previous purchases (GET /Order/previouspurchase/v1/{memberId})
+
+struct PreviousPurchasesResponse: Codable {
+    let purchasedOrders: [PreviousPurchase]?
+}
+
+struct PreviousPurchase: Codable, Identifiable {
+    var id: String { digitalOrderKey }
+
+    let digitalOrderKey: String
+    let orderName: String?
+    let orderDescription: String?
+    let image: String?
+    let orderTotal: Double?
+    let currencyCode: String?
+    let configurations: [OrderConfiguration]?
 }

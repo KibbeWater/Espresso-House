@@ -26,8 +26,29 @@ struct PickupOptionsResponse: Codable {
 }
 
 struct PickupOption: Codable, Identifiable, Hashable {
-    var id: String { type }
+    var id: String { pickupOptionKey ?? pickupOption ?? UUID().uuidString }
 
-    let type: String           // e.g. "TakeAway", "EatIn"
-    let displayName: String?
+    let pickupOption: String?              // e.g. "TakeAway", "EatIn"
+    let pickupOptionDisplayText: String?   // e.g. "Take Away", "Eat In"
+    let pickupOptionKey: String?           // unique key
+    let orderType: String?                 // e.g. "PreOrderTakeAway"
+    let sortOrder: Int?
+
+    // Convenience for display
+    var displayName: String {
+        pickupOptionDisplayText ?? pickupOption ?? "Unknown"
+    }
+
+    var type: String {
+        pickupOption ?? ""
+    }
+
+    // Manual init for mock data
+    init(pickupOption: String, displayText: String, orderType: String? = nil, key: String? = nil, sortOrder: Int? = nil) {
+        self.pickupOption = pickupOption
+        self.pickupOptionDisplayText = displayText
+        self.pickupOptionKey = key ?? pickupOption
+        self.orderType = orderType
+        self.sortOrder = sortOrder
+    }
 }

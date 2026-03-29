@@ -183,6 +183,12 @@ struct MainView: View {
         .navigationDestination(isPresented: $showActiveOrder) {
             ActiveOrderView()
         }
+        .onChange(of: activeOrderVM.hasActiveOrder) { _, hasOrder in
+            // Auto-open ActiveOrderView when a new order appears (e.g. after simulated checkout)
+            if hasOrder && !showActiveOrder {
+                showActiveOrder = true
+            }
+        }
     }
 }
 

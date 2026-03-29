@@ -9,8 +9,13 @@
 import Foundation
 
 class MockOrderService: OrderServiceProtocol {
+    static let shared = MockOrderService()
+
     private var mockOrderKey = UUID().uuidString
     private var orderCreatedAt: Date?
+    /// Configurations from the last placed order, used to populate ActiveOrder
+    private var lastOrderConfigurations: [ShopProduct] = []
+    private var lastOrderShop: CoffeeShop?
 
     func getArticleConfigurations(shopNumber: String, articleNumbers: [String]) async throws -> [ShopProduct] {
         // Return mock configurations with upsells
@@ -188,19 +193,28 @@ class MockOrderService: OrderServiceProtocol {
         ]
     }
 
-    func getPickupOptions(shopNumber: String) async throws -> [PickupOption] {
-        [PickupOption(type: "TakeAway", displayName: "Take Away")]
+    func getShopStatus(shopNumber: String) async throws -> ShopStatusResponse {
+        ShopStatusResponse(shopNumber: Int(shopNumber), shopStatus: "online", queueInfo: nil, nextSlot: nil)
     }
+
+    func getPickupOptions(shopNumber: String) async throws -> [PickupOption] {
+        [
+            PickupOption(pickupOption: "TakeAway", displayText: "Take Away", orderType: "PreOrderTakeAway"),
+            PickupOption(pickupOption: "EatIn", displayText: "Eat In", orderType: "PreOrderEatIn")
+        ]
+    }
+
 
     func createOrder(request: OrderCreateRequest) async throws -> OrderCreateResponse {
         mockOrderKey = UUID().uuidString
         orderCreatedAt = Date()
+        lastOrderConfigurations = request.configurations
         // Simulate network delay
         try await Task.sleep(for: .milliseconds(500))
         return OrderCreateResponse(
             digitalOrderKey: mockOrderKey,
             orderNumber: "MOCK-\(Int.random(in: 1000...9999))",
-            totalAmount: 49,
+            totalAmount: request.configurations.reduce(0) { $0 + ($1.price ?? 0) },
             currency: "SEK"
         )
     }
@@ -224,22 +238,56 @@ class MockOrderService: OrderServiceProtocol {
         guard let createdAt = orderCreatedAt else { return [] }
 
         let elapsed = Date().timeIntervalSince(createdAt)
+        let fast = DebugSettings.shared.fastMockProgression
         let debugStatus = DebugSettings.shared.mockOrderStatus
 
         // If debug has forced a status, use that
         let status: String
-        if debugStatus != "Created" {
+        if debugStatus != "Auto" {
             status = debugStatus
         } else {
-            // Auto-progress: Created -> Preparing (10s) -> Ready (20s)
-            if elapsed > 20 {
+            // Auto-progress timings (fast: 3s per step, normal: 8-15s per step)
+            let t1 = fast ? 3.0 : 8.0    // Created → Preparing
+            let t2 = fast ? 6.0 : 18.0   // Preparing → Ready
+            let t3 = fast ? 12.0 : 40.0  // Ready → Completed (picked up)
+
+            if elapsed > t3 {
+                status = "Completed"
+            } else if elapsed > t2 {
                 status = "Ready"
-            } else if elapsed > 10 {
+            } else if elapsed > t1 {
                 status = "Preparing"
             } else {
                 status = "Created"
             }
         }
+
+        // Once completed, clear after a brief display period
+        if status == "Completed" {
+            let completedDelay = fast ? 5.0 : 8.0
+            let completedAt = fast ? 12.0 : 40.0
+            if elapsed > completedAt + completedDelay {
+                orderCreatedAt = nil
+                return []
+            }
+        }
+
+        // Build configurations from last order
+        let configs = lastOrderConfigurations.map { product in
+            OrderConfiguration(
+                articleNumber: product.articleNumber,
+                articleName: product.articleName,
+                img: product.img,
+                navName: product.navName,
+                shortDescription: product.shortDescription
+            )
+        }
+
+        let totalAmount = lastOrderConfigurations.reduce(0.0) { $0 + ($1.price ?? 0) }
+
+        // Build estimated pickup time (5 minutes from order creation)
+        let formatter = ISO8601DateFormatter()
+        let estimatedPickup = formatter.string(from: createdAt.addingTimeInterval(300))
 
         return [
             ActiveOrder(
@@ -247,22 +295,29 @@ class MockOrderService: OrderServiceProtocol {
                 orderNumber: 4242,
                 shopNumber: "322",
                 orderStatus: status,
-                orderTotal: 49,
-                orderGrossTotal: 49,
+                orderTotal: totalAmount > 0 ? totalAmount : 49,
+                orderGrossTotal: totalAmount > 0 ? totalAmount : 49,
                 currencyCode: "SEK",
-                orderCreated: ISO8601DateFormatter().string(from: createdAt),
+                orderCreated: formatter.string(from: createdAt),
                 orderLastUpdated: nil,
-                orderFullyPaid: ISO8601DateFormatter().string(from: createdAt),
-                estimatedPickupTime: nil,
+                orderFullyPaid: formatter.string(from: createdAt),
+                estimatedPickupTime: estimatedPickup,
                 orderType: "PreOrderTakeAway",
                 customerDisplayName: "Mock",
                 orderPinCode: "1234",
-                shopInformation: ActiveOrder.ShopInfo(shopNumber: 322, shopName: "Mock Espresso House", address1: nil, city: nil),
-                configurations: [
+                shopInformation: ActiveOrder.ShopInfo(shopNumber: 322, shopName: "Mock Espresso House", address1: nil, city: nil, latitude: 65.584246, longitude: 22.152694),
+                configurations: configs.isEmpty ? [
                     OrderConfiguration(articleNumber: "MOCK-001", articleName: "Latte Standard", img: nil, navName: "Standard", shortDescription: nil)
-                ]
+                ] : configs
             )
         ]
+    }
+
+    /// Reset mock state (called from debug menu)
+    func reset() {
+        orderCreatedAt = nil
+        lastOrderConfigurations = []
+        mockOrderKey = UUID().uuidString
     }
 
     func createDirectPayment(request: StartDirectPaymentRequest) async throws -> StartDirectPaymentResponse {

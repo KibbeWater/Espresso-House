@@ -25,7 +25,7 @@ struct ProductSheet: View {
     private var orderService: any OrderServiceProtocol {
         #if DEBUG
         if DebugSettings.shared.isSimulating {
-            return MockOrderService()
+            return MockOrderService.shared
         }
         #endif
         return api.order
@@ -71,6 +71,19 @@ struct ProductSheet: View {
                 VStack(spacing: 0) {
                     // Hero image
                     productImage
+                        .overlay(alignment: .topTrailing) {
+                            Button {
+                                dismiss()
+                            } label: {
+                                Image(systemName: "xmark")
+                                    .font(.system(size: 14, weight: .semibold))
+                                    .foregroundStyle(.secondary)
+                                    .frame(width: 30, height: 30)
+                                    .background(.ultraThinMaterial)
+                                    .clipShape(Circle())
+                            }
+                            .padding(12)
+                        }
 
                     VStack(alignment: .leading, spacing: 16) {
                         // Name & description
@@ -83,11 +96,13 @@ struct ProductSheet: View {
 
                         if isLoadingConfig {
                             HStack {
+                                Spacer()
                                 ProgressView()
                                 Text("Loading options...")
                                     .foregroundStyle(.secondary)
+                                Spacer()
                             }
-                            .padding(.vertical)
+                            .padding(.vertical, 24)
                         } else {
                             // Customization levels
                             customizationLevels
@@ -105,13 +120,7 @@ struct ProductSheet: View {
             .safeAreaInset(edge: .bottom) {
                 addToCartButton
             }
-            .navigationTitle(masterProduct.name)
-            .navigationBarTitleDisplayMode(.inline)
-            .toolbar {
-                ToolbarItem(placement: .topBarTrailing) {
-                    Button("Close") { dismiss() }
-                }
-            }
+            .toolbar(.hidden, for: .navigationBar)
             .onAppear {
                 Task {
                     await loadArticleConfigurations()
@@ -398,9 +407,7 @@ struct ProductSheet: View {
                 }
             }
 
-            for _ in 0..<quantity {
-                cart.addItem(product: configuredProduct)
-            }
+            cart.addItem(product: configuredProduct, quantity: quantity)
             dismiss()
         } label: {
             HStack {

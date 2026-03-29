@@ -53,37 +53,41 @@ struct DebugMenuView: View {
                     }
                 }
 
-                Section("Force Order Status") {
-                    let statuses = ["Created", "Preparing", "Ready", "Completed"]
+                Section("Order Progression") {
+                    Toggle("Fast Progression (2s/step)", isOn: $debugSettings.fastMockProgression)
+
+                    let statuses = ["Auto", "Created", "Preparing", "Ready", "Completed"]
                     ForEach(statuses, id: \.self) { status in
                         Button {
                             debugSettings.mockOrderStatus = status
 
-                            // Update or create mock order with stable key
-                            let mockOrder = ActiveOrder(
-                                digitalOrderKey: "debug-forced-order",
-                                orderNumber: 4242,
-                                shopNumber: "322",
-                                orderStatus: status,
-                                orderTotal: 49,
-                                orderGrossTotal: 49,
-                                currencyCode: "SEK",
-                                orderCreated: ISO8601DateFormatter().string(from: Date()),
-                                orderLastUpdated: nil,
-                                orderFullyPaid: nil,
-                                estimatedPickupTime: nil,
-                                orderType: "PreOrderTakeAway",
-                                customerDisplayName: "Debug",
-                                orderPinCode: "0000",
-                                shopInformation: ActiveOrder.ShopInfo(shopNumber: 322, shopName: "Debug Espresso House", address1: nil, city: nil),
-                                configurations: [
-                                    OrderConfiguration(articleNumber: "DBG-001", articleName: "Debug Latte", img: nil, navName: "Standard", shortDescription: nil)
-                                ]
-                            )
-                            activeOrderVM.setMockOrder(mockOrder)
+                            if status != "Auto" {
+                                // Force a specific status by injecting a mock order
+                                let mockOrder = ActiveOrder(
+                                    digitalOrderKey: "debug-forced-order",
+                                    orderNumber: 4242,
+                                    shopNumber: "322",
+                                    orderStatus: status,
+                                    orderTotal: 49,
+                                    orderGrossTotal: 49,
+                                    currencyCode: "SEK",
+                                    orderCreated: ISO8601DateFormatter().string(from: Date()),
+                                    orderLastUpdated: nil,
+                                    orderFullyPaid: nil,
+                                    estimatedPickupTime: ISO8601DateFormatter().string(from: Date().addingTimeInterval(300)),
+                                    orderType: "PreOrderTakeAway",
+                                    customerDisplayName: "Debug",
+                                    orderPinCode: "0000",
+                                    shopInformation: ActiveOrder.ShopInfo(shopNumber: 322, shopName: "Debug Espresso House", address1: nil, city: nil, latitude: nil, longitude: nil),
+                                    configurations: [
+                                        OrderConfiguration(articleNumber: "DBG-001", articleName: "Debug Latte", img: nil, navName: "Standard", shortDescription: nil)
+                                    ]
+                                )
+                                activeOrderVM.setMockOrder(mockOrder)
+                            }
                         } label: {
                             HStack {
-                                Text(status)
+                                Text(status == "Auto" ? "Auto (time-based)" : status)
                                 Spacer()
                                 if debugSettings.mockOrderStatus == status {
                                     Image(systemName: "checkmark")
@@ -98,13 +102,16 @@ struct DebugMenuView: View {
                     Button("Clear Active Orders") {
                         activeOrderVM.activeOrders.removeAll()
                         activeOrderVM.stopPolling()
+                        MockOrderService.shared.reset()
                     }
 
                     Button("Reset Simulation") {
                         debugSettings.isSimulating = false
-                        debugSettings.mockOrderStatus = "Created"
+                        debugSettings.mockOrderStatus = "Auto"
+                        debugSettings.fastMockProgression = false
                         activeOrderVM.activeOrders.removeAll()
                         activeOrderVM.stopPolling()
+                        MockOrderService.shared.reset()
                     }
                     .foregroundStyle(.red)
                 }
