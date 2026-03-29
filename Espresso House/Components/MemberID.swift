@@ -11,6 +11,7 @@ struct MemberID: View {
     @State private var showInfo = false
     
     let id: String
+    var pinCode: String?
     
     @State private var currentTime = Date()
     private let timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
@@ -60,9 +61,10 @@ struct MemberID: View {
                         .onReceive(timer) { input in
                             currentTime = input
                         }
-                    
-                    // TODO: Pin source unknown — re-enable once we know where it comes from
-                    // Text("Pin: 0000")
+
+                    if let pinCode {
+                        Text("Pin: \(pinCode)")
+                    }
                 }
             }
             .padding(.horizontal)

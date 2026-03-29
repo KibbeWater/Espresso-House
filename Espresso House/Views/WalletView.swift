@@ -6,11 +6,14 @@
 //
 
 import SwiftUI
+import PassKit
 
 struct WalletView: View {
     @StateObject var viewModel: WalletViewModel = WalletViewModel()
     @State private var showTopUp = false
     @State private var navigateToPaymentCards = false
+    @State private var passInWallet = false
+    @State private var generatedPass: PKPass?
 
     var body: some View {
         ScrollView {
@@ -24,13 +27,22 @@ struct WalletView: View {
                 }
                 .padding(.horizontal)
 
-                MemberID(id: SharedVars.shared.memberId ?? "")
+                MemberID(id: SharedVars.shared.memberId ?? "", pinCode: viewModel.memberPinCode)
                     .clipShape(RoundedRectangle(cornerRadius: 18))
                     .overlay(
                         RoundedRectangle(cornerRadius: 18)
                             .stroke(.secondary.opacity(0.3), lineWidth: 2)
                     )
                     .padding(.horizontal)
+
+                if !passInWallet, let pass = generatedPass {
+                    AddPassToWalletButton([pass]) { added in
+                        passInWallet = added
+                    }
+                    .addPassToWalletButtonStyle(.black)
+                    .frame(height: 44)
+                    .padding(.horizontal)
+                }
 
                 CoffeeCard(balance: viewModel.balance) {
                     showTopUp = true
@@ -92,6 +104,28 @@ struct WalletView: View {
                     navigateToPaymentCards = true
                 }
             }
+
+            // Check if pass is already in wallet
+            if let memberId = SharedVars.shared.memberId {
+                passInWallet = PassGenerator.isPassInWallet(memberId: memberId)
+            }
+        }
+        .onChange(of: viewModel.memberFirstName) {
+            fetchPass()
+        }
+    }
+
+    private func fetchPass() {
+        guard generatedPass == nil,
+              !passInWallet,
+              let memberId = SharedVars.shared.memberId else { return }
+        Task {
+            generatedPass = try? await PassGenerator.generatePass(
+                memberId: memberId,
+                firstName: viewModel.memberFirstName,
+                lastName: viewModel.memberLastName,
+                pinCode: viewModel.memberPinCode
+            )
         }
     }
 }

@@ -14,6 +14,9 @@ class WalletViewModel: ObservableObject {
     @Published var balance: Balance?
     @Published var coupons: [Coupon] = []
     @Published var paymentCards: [PaymentOption] = []
+    @Published var memberFirstName: String = ""
+    @Published var memberLastName: String = ""
+    @Published var memberPinCode: String?
 
     init() {
         Task {
@@ -37,6 +40,9 @@ class WalletViewModel: ObservableObject {
             self.balance = member.balance
             self.coupons = member.coupons
             self.paymentCards = allCards.filter { !$0.isCoffeeCard }
+            self.memberFirstName = member.firstName
+            self.memberLastName = member.lastName
+            self.memberPinCode = member.pinCode
         }
     }
 }

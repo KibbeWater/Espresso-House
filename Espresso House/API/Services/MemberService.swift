@@ -70,10 +70,11 @@ fileprivate struct MemberResponse: Decodable {
     let lastName: String
     let phoneNumber: String
     let email: String?
-    
+    let pinCode: String?
+
     let coupons: [Coupon]
     let balance: BBalance
-    
+
     func toMember() -> Member {
         Member(
             id: self.myEspressoHouseNumber,
@@ -82,6 +83,7 @@ fileprivate struct MemberResponse: Decodable {
             email: self.email,
             phoneNumber: self.phoneNumber,
             fikaPoints: self.fikaClub.fikaPoints,
+            pinCode: self.pinCode,
             balance: self.balance.toBalance(),
             coupons: self.coupons
         )

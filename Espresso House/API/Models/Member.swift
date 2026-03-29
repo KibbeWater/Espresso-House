@@ -16,7 +16,8 @@ public struct Member: Sendable, Identifiable {
     public var phoneNumber: String
     
     public var fikaPoints: Int
-    
+    public var pinCode: String?
+
     public var balance: Balance
     public var coupons: [Coupon]
 }
