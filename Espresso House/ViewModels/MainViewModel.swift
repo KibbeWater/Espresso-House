@@ -15,6 +15,7 @@ class MainViewModel: ObservableObject {
     @Published var points: Int = 0
     @Published var coupons: [Coupon] = []
     @Published var challenges: [Challenge] = []
+    @Published var balance: Balance?
     
     init() {
         Task {
@@ -36,6 +37,12 @@ class MainViewModel: ObservableObject {
             self.points = member.fikaPoints
             self.challenges = challenges
             self.coupons = member.coupons
+            self.balance = member.balance
+
+            // Pre-generate the barcode so it's instant when opening My ID
+            if let memberId = SharedVars.shared.memberId {
+                Barcode.pregenerate("\(memberId):member")
+            }
         }
     }
 }

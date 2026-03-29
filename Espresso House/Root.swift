@@ -12,6 +12,7 @@ import Kingfisher
 @main
 struct Root: App {
     @State private var isUpsideDown = false
+    @State private var previousBrightness: CGFloat?
     @StateObject private var sharedVars = SharedVars.shared
     @Environment(\.espressoAPI) var api: EspressoAPI
     @State private var activeOrderVM = ActiveOrderViewModel()
@@ -111,6 +112,15 @@ struct Root: App {
                             }
                             .rotationEffect(.degrees(-180))
                         }
+                    }
+                }
+                .onChange(of: isUpsideDown) { _, upsideDown in
+                    if upsideDown {
+                        previousBrightness = UIScreen.main.brightness
+                        UIScreen.main.brightness = 1.0
+                    } else if let saved = previousBrightness {
+                        UIScreen.main.brightness = saved
+                        previousBrightness = nil
                     }
                 }
                 .onAppear {

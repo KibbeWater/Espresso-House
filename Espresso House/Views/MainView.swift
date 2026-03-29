@@ -146,7 +146,7 @@ struct MainView: View {
                     }
                     .sheet(isPresented: $isIdShown) {
                         NavigationStack {
-                            IDSheet(isPresented: $isIdShown)
+                            IDSheet(balance: viewModel.balance)
                         }
                     }
 
@@ -167,7 +167,6 @@ struct MainView: View {
                     .sheet(isPresented: $isProfileShown) {
                         NavigationStack {
                             ProfileSheet(
-                                isPresented: $isProfileShown,
                                 firstName: viewModel.firstName,
                                 lastName: viewModel.lastName
                             )

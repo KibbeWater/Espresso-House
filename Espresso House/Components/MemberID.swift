@@ -39,8 +39,7 @@ struct MemberID: View {
                     }
                 }
                 .sheet(isPresented: $showInfo) {
-                    MemberIDInfoSheet(isPresented: $showInfo)
-                        .presentationDetents([.fraction(0.15), .medium])
+                    MemberIDInfoSheet()
                 }
             }
             .padding(.horizontal)

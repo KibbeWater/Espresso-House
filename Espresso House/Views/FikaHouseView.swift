@@ -42,7 +42,7 @@ struct FikaHouseView: View {
         .foregroundStyle(Color.accentColor)
         .matchedGeometryEffect(id: "moreInfo", in: animationNamespace)
         .sheet(isPresented: $sheetOpen) {
-            PointInfoSheet(isPresented: $sheetOpen)
+            PointInfoSheet()
         }
     }
     

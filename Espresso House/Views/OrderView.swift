@@ -133,6 +133,9 @@ struct OrderView: View {
         var count: Dictionary<String, Int> = tags.reduce(into: [:]) { $0[$1.text, default: 0] += 1 }
         count["All"] = Int.max
 
+        // Remove tags that match the category name since they're redundant with "All"
+        count.removeValue(forKey: category.name)
+
         return count.keys
             .sorted { lhs, rhs in
                 let lhsCount = count[lhs]!
@@ -339,7 +342,7 @@ struct OrderView: View {
                                         ForEach(tags, id: \.self) { tag in
                                             let active = isTagActive(category.name, tag: tag)
                                             Button {
-                                                withAnimation {
+                                                withAnimation(.snappy(duration: 0.25)) {
                                                     activeTags[category.name] = active ? nil : tag
                                                 }
                                             } label: {
@@ -351,7 +354,13 @@ struct OrderView: View {
                                                     .padding(.vertical, 6)
                                                     .background(active ? Color.accentColor.opacity(0.12) : Color(.systemGray6))
                                                     .clipShape(Capsule())
+                                                    .overlay(
+                                                        Capsule()
+                                                            .stroke(active ? Color.accentColor.opacity(0.3) : .clear, lineWidth: 1)
+                                                    )
+                                                    .animation(.snappy(duration: 0.25), value: active)
                                             }
+                                            .buttonStyle(.plain)
                                         }
                                     }
                                 }
@@ -371,6 +380,7 @@ struct OrderView: View {
                                                         .stroke(.secondary.opacity(0.3), lineWidth: 1)
                                                 )
                                         }
+                                        .buttonStyle(.plain)
                                     }
                                 }
                             }

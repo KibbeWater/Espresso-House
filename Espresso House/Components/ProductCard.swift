@@ -42,17 +42,18 @@ struct ProductCard: View {
                     .fontWeight(.medium)
                     .multilineTextAlignment(.leading)
                     .lineLimit(2)
-                    .fixedSize(horizontal: false, vertical: true)
+                    .frame(maxWidth: .infinity, alignment: .leading)
                 if let price = product.displayPrice, price > 0 {
                     Text("from \(Int(price)) \(product.currency)")
                         .foregroundStyle(.secondary)
                         .font(.caption)
                 }
+                Spacer(minLength: 0)
             }
             .padding(.horizontal, 8)
             .padding(.vertical, 8)
         }
-        .frame(width: 172)
+        .frame(width: 172, height: 200, alignment: .top)
     }
 }
 

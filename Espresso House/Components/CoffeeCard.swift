@@ -47,8 +47,7 @@ struct CoffeeCard: View {
             .padding()
             .foregroundStyle(.secondaryAccent)
             .sheet(isPresented: $showInfo) {
-                MemberIDInfoSheet(isPresented: $showInfo)
-                    .presentationDetents([.fraction(0.15), .medium])
+                CoffeeCardInfoSheet()
             }
         })
         .background(Color.secondaryAccent.opacity(0.3))

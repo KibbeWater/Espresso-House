@@ -36,6 +36,7 @@ struct CartSheet: View {
                                             .resizable()
                                             .aspectRatio(contentMode: .fit)
                                             .frame(width: 40, height: 40)
+                                            .background(Color(.systemGray6))
                                             .clipShape(RoundedRectangle(cornerRadius: 6))
                                     }
 

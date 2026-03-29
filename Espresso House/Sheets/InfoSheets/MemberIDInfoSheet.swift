@@ -8,25 +8,27 @@
 import SwiftUI
 
 struct MemberIDInfoSheet: View {
-    @Binding var isPresented: Bool
-    
-    func bold(_ text: String) -> Text {
-        Text(text)
-            .fontWeight(.semibold)
-    }
-    
+    @Environment(\.dismiss) private var dismiss
+
     var body: some View {
-        VStack(spacing: 0) {
-            SheetHeader("Member ID", isPresented: $isPresented)
-            
+        VStack(spacing: 16) {
+            Text("Member ID")
+                .font(.headline)
+
             Text("Scan in our coffee shops to pay with your Coffee Card, redeem coupons, and collect Fika Points.")
-                .padding(.horizontal)
-            
-            Spacer()
+                .multilineTextAlignment(.center)
+                .foregroundStyle(.secondary)
         }
+        .padding(.horizontal, 24)
+        .padding(.vertical)
+        .presentationDetents([.fraction(0.2), .medium])
+        .presentationDragIndicator(.visible)
     }
 }
 
 #Preview {
-    MemberIDInfoSheet(isPresented: .constant(true))
+    Text("")
+        .sheet(isPresented: .constant(true)) {
+            MemberIDInfoSheet()
+        }
 }
