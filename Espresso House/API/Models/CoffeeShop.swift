@@ -30,7 +30,7 @@ public struct CoffeeShop: Codable, Identifiable, Hashable {
     public let expressCheckout: Bool?
     public let takeAwayOnly: Bool?
     public let preorderOnline: Bool
-    
+
     public let todayOpenFrom: String
     public let todayOpenTo: String
 

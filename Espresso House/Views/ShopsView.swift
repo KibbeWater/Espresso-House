@@ -22,11 +22,10 @@ struct ShopMapView: View {
     let onNavigate: () -> Bool
 
     private var canOrder: Bool {
-        location.isCurrentlyOpen && location.preorderOnline
+        location.isCurrentlyOpen
     }
 
     private var statusText: String {
-        if !location.preorderOnline { return "No online ordering" }
         if location.isClosedToday { return "Closed today" }
         if !location.isCurrentlyOpen { return "Closed" }
         return "Open"
@@ -61,9 +60,7 @@ struct ShopMapView: View {
                                 Text(statusText)
                                     .foregroundStyle(canOrder ? .green : .red)
                                     .fontWeight(.medium)
-                                if location.preorderOnline {
-                                    Text(location.formattedHours)
-                                }
+                                Text(location.formattedHours)
                             }
                             .font(.caption)
                         }
@@ -356,7 +353,7 @@ struct ShopListPanel: View {
                 ScrollView {
                     LazyVStack(spacing: 0) {
                         ForEach(shops) { shop in
-                            let canOrder = shop.isCurrentlyOpen && shop.preorderOnline
+                            let canOrder = shop.isCurrentlyOpen
                             Button {
                                 if canOrder { onSelectShop(shop) }
                             } label: {
@@ -382,10 +379,7 @@ struct ShopListPanel: View {
                                                 Circle()
                                                     .fill(canOrder ? .green : .red)
                                                     .frame(width: 6, height: 6)
-                                                if !shop.preorderOnline {
-                                                    Text("No online ordering")
-                                                        .foregroundStyle(.secondary)
-                                                } else if shop.isClosedToday {
+                                                if shop.isClosedToday {
                                                     Text("Closed today")
                                                         .foregroundStyle(.red)
                                                 } else {

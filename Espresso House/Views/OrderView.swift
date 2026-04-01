@@ -52,12 +52,6 @@ struct OrderView: View {
         isLoading = true
         defer { isLoading = false }
 
-        // Check model flags first
-        if !shop.preorderOnline {
-            shopUnavailable = true
-            return
-        }
-
         // Check runtime shop status
         if let status = try? await orderService.getShopStatus(shopNumber: String(shop.id)) {
             if !status.isOnline {
@@ -193,16 +187,14 @@ struct OrderView: View {
                 if shopUnavailable {
                     VStack(spacing: 16) {
                         Spacer()
-                        Image(systemName: shop.preorderOnline ? "clock.badge.xmark" : "bag.badge.questionmark")
+                        Image(systemName: "clock.badge.xmark")
                             .font(.system(size: 48))
                             .foregroundStyle(.secondary)
-                        Text(shop.preorderOnline ? "Shop not available" : "Online ordering not available")
+                        Text("Shop not available")
                             .font(.title3)
                             .fontWeight(.semibold)
                         Text(shopOfflineMessage
-                             ?? (!shop.preorderOnline
-                                 ? "This shop doesn't support online ordering yet."
-                                 : shop.isClosedToday
+                             ?? (shop.isClosedToday
                                     ? "This shop is closed today."
                                     : "This shop is currently closed.\nOpen \(shop.formattedHours)"))
                             .font(.subheadline)
