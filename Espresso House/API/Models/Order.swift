@@ -80,6 +80,16 @@ struct ActiveOrder: Codable, Identifiable {
 
     // Convenience accessors for UI
     var status: String? { orderStatus }
+
+    /// User-friendly display text for the order status
+    var displayStatus: String {
+        switch orderStatus {
+        case "UnderProduction": return "Preparing"
+        case "ReadyForPickup": return "Ready for Pickup"
+        case "Delivered": return "Delivered"
+        default: return orderStatus ?? "Processing"
+        }
+    }
     var totalAmount: Double? { orderTotal }
     var currency: String? { currencyCode }
     var shopName: String? { shopInformation?.shopName }

@@ -81,7 +81,7 @@ struct ActiveOrderView: View {
 
     private func isOrderReady(_ order: ActiveOrder) -> Bool {
         let s = order.status?.lowercased() ?? ""
-        return s.contains("ready") || s.contains("delivered") || s.contains("completed") || s.contains("pickup")
+        return s.contains("readyforpickup") || s.contains("delivered")
     }
 
     private func formattedETA(for order: ActiveOrder) -> String? {
@@ -95,7 +95,7 @@ struct ActiveOrderView: View {
 
     private func isOrderCompleted(_ order: ActiveOrder) -> Bool {
         let s = order.status?.lowercased() ?? ""
-        return s.contains("completed") || s.contains("delivered")
+        return s.contains("delivered")
     }
 
     @ViewBuilder
@@ -142,14 +142,14 @@ struct ActiveOrderView: View {
     @ViewBuilder
     private func orderProgressView(for order: ActiveOrder) -> some View {
         let status = order.status?.lowercased() ?? ""
-        let isCompleted = status.contains("delivered") || status.contains("completed")
-        let isReady = status.contains("ready") || status.contains("pickup") || isCompleted
-        let isPreparing = status.contains("preparing") || status.contains("inprogress") || isReady
+        let isCompleted = status.contains("delivered")
+        let isReady = status.contains("readyforpickup") || isCompleted
+        let isPreparing = status.contains("underproduction") || isReady
         let steps: [(String, String, Bool)] = [
             ("Placed", "checkmark.circle.fill", true),
-            ("Preparing", "flame.fill", isPreparing),
-            ("Ready", "cup.and.saucer.fill", isReady),
-            ("Completed", "flag.checkered", isCompleted),
+            ("Under Production", "flame.fill", isPreparing),
+            ("Ready for Pickup", "cup.and.saucer.fill", isReady),
+            ("Delivered", "flag.checkered", isCompleted),
         ]
 
         VStack(spacing: 0) {

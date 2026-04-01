@@ -32,7 +32,7 @@ struct MainView: View {
                                     .fontWeight(.semibold)
                                     .font(.subheadline)
                                 if let order = activeOrderVM.latestOrder {
-                                    Text(order.status ?? "Processing")
+                                    Text(order.displayStatus)
                                         .font(.caption)
                                         .opacity(0.8)
                                 }

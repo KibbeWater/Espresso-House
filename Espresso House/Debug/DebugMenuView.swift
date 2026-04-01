@@ -56,7 +56,7 @@ struct DebugMenuView: View {
                 Section("Order Progression") {
                     Toggle("Fast Progression (2s/step)", isOn: $debugSettings.fastMockProgression)
 
-                    let statuses = ["Auto", "Created", "Preparing", "Ready", "Completed"]
+                    let statuses = ["Auto", "Created", "UnderProduction", "ReadyForPickup", "Delivered"]
                     ForEach(statuses, id: \.self) { status in
                         Button {
                             debugSettings.mockOrderStatus = status

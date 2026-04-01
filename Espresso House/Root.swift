@@ -193,27 +193,29 @@ struct ActiveOrderAccessory: View {
     }
 
     private func statusIcon(for order: ActiveOrder) -> String {
-        let s = order.status?.lowercased() ?? ""
-        if s.contains("completed") || s.contains("delivered") { return "checkmark.circle.fill" }
-        if s.contains("ready") || s.contains("pickup") { return "cup.and.saucer.fill" }
-        if s.contains("preparing") || s.contains("inprogress") { return "flame.fill" }
-        return "clock.fill"
+        switch order.status {
+        case "Delivered": return "checkmark.circle.fill"
+        case "ReadyForPickup": return "cup.and.saucer.fill"
+        case "UnderProduction": return "flame.fill"
+        default: return "clock.fill"
+        }
     }
 
     private func statusColor(for order: ActiveOrder) -> Color {
-        let s = order.status?.lowercased() ?? ""
-        if s.contains("completed") || s.contains("delivered") { return .green }
-        if s.contains("ready") || s.contains("pickup") { return .green }
-        if s.contains("preparing") || s.contains("inprogress") { return .orange }
-        return .accentColor
+        switch order.status {
+        case "Delivered", "ReadyForPickup": return .green
+        case "UnderProduction": return .orange
+        default: return .accentColor
+        }
     }
 
     private func statusText(for order: ActiveOrder) -> String {
-        let s = order.status?.lowercased() ?? ""
-        if s.contains("completed") || s.contains("delivered") { return "Order complete" }
-        if s.contains("ready") || s.contains("pickup") { return "Order ready!" }
-        if s.contains("preparing") || s.contains("inprogress") { return "Preparing your order..." }
-        return "Order placed"
+        switch order.status {
+        case "Delivered": return "Order complete"
+        case "ReadyForPickup": return "Order ready!"
+        case "UnderProduction": return "Preparing your order..."
+        default: return "Order placed"
+        }
     }
 }
 

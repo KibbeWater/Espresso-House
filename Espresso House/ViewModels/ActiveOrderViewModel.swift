@@ -55,10 +55,9 @@ class ActiveOrderViewModel {
 
                 // Check for newly ready orders and trigger haptic
                 for order in orders {
-                    let s = order.status?.lowercased() ?? ""
-                    let isReady = s.contains("ready") || s.contains("delivered") || s.contains("completed")
-                    let prev = previousStatuses[order.digitalOrderKey]?.lowercased() ?? ""
-                    let wasNotReady = !prev.contains("ready") && !prev.contains("delivered") && !prev.contains("completed")
+                    let isReady = order.status == "ReadyForPickup" || order.status == "Delivered"
+                    let prev = previousStatuses[order.digitalOrderKey]
+                    let wasNotReady = prev != "ReadyForPickup" && prev != "Delivered"
                     let notYetNotified = !self.notifiedOrderKeys.contains(order.digitalOrderKey)
 
                     if isReady && (wasNotReady || notYetNotified) && notYetNotified {
@@ -74,8 +73,7 @@ class ActiveOrderViewModel {
 
     func clearCompletedOrders() {
         activeOrders.removeAll { order in
-            let s = order.status?.lowercased() ?? ""
-            return s == "completed" || s == "delivered"
+            order.status == "Delivered"
         }
         if activeOrders.isEmpty {
             stopPolling()

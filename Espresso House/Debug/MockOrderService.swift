@@ -247,23 +247,23 @@ class MockOrderService: OrderServiceProtocol {
             status = debugStatus
         } else {
             // Auto-progress timings (fast: 3s per step, normal: 8-15s per step)
-            let t1 = fast ? 3.0 : 8.0    // Created → Preparing
-            let t2 = fast ? 6.0 : 18.0   // Preparing → Ready
-            let t3 = fast ? 12.0 : 40.0  // Ready → Completed (picked up)
+            let t1 = fast ? 3.0 : 8.0    // Created → UnderProduction
+            let t2 = fast ? 6.0 : 18.0   // UnderProduction → ReadyForPickup
+            let t3 = fast ? 12.0 : 40.0  // ReadyForPickup → Delivered
 
             if elapsed > t3 {
-                status = "Completed"
+                status = "Delivered"
             } else if elapsed > t2 {
-                status = "Ready"
+                status = "ReadyForPickup"
             } else if elapsed > t1 {
-                status = "Preparing"
+                status = "UnderProduction"
             } else {
                 status = "Created"
             }
         }
 
         // Once completed, clear after a brief display period
-        if status == "Completed" {
+        if status == "Delivered" {
             let completedDelay = fast ? 5.0 : 8.0
             let completedAt = fast ? 12.0 : 40.0
             if elapsed > completedAt + completedDelay {
